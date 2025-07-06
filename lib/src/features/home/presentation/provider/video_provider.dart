@@ -5,24 +5,24 @@ import 'package:kahf_flutter/src/features/home/presentation/provider/video_state
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 
-part 'video_provider.g.dart';
+// part 'video_provider.g.dart';
 
-@Riverpod(keepAlive: true)
-class Video extends _$Video {
-  late GetVideosUSeCase _getVideosUseCase;
+// @Riverpod(keepAlive: true)
+// class Video extends _$Video {
+//   late GetVideosUSeCase _getVideosUseCase;
 
-  @override
-  VideoState build() {
-    _getVideosUseCase = ref.read(getVideosUseCaseProvider);
+//   @override
+//   VideoState build() {
+//     _getVideosUseCase = ref.read(getVideosUseCaseProvider);
 
-    return VideoState.initial();
-  }
+//     return VideoState.initial();
+//   }
 
-  Future<void> call() async {
-    state = state.copyWith(isInitialLoading: true);
+//   Future<void> call() async {
+//     // state = state.copyWith(isInitialLoading: true);
 
-    final result = await _getVideosUseCase.call();
+//     final result = await _getVideosUseCase.call();
 
-    debugPrint(result as String?);
-  }
-}
+//     debugPrint(result as String?);
+//   }
+// }

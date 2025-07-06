@@ -1,6 +1,6 @@
 part of '../dependency_injection.dart';
 
-@riverpod
-VideoRepositoryImpl videoRepositoryImpl(Ref ref) {
+@Riverpod(keepAlive: true)
+VideoRepository videoRepository(Ref ref) {
   return VideoRepositoryImpl(service: ref.read(videoServicesProvider));
 }

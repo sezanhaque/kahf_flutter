@@ -23,7 +23,7 @@ final sharedPreferencesProvider = FutureProvider<SharedPreferences>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef SharedPreferencesRef = FutureProviderRef<SharedPreferences>;
-String _$dioHash() => r'4668c52de1c456276f189bb78fe7e81d5168d741';
+String _$dioHash() => r'9c360db17fa61b25f2420ea2d244e1ed80bc855f';
 
 /// See also [dio].
 @ProviderFor(dio)
@@ -57,41 +57,22 @@ final videoServicesProvider = AutoDisposeProvider<VideoServices>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef VideoServicesRef = AutoDisposeProviderRef<VideoServices>;
-String _$videoRepositoryImplHash() =>
-    r'62cad77699a5a9f23e67edf991ce704d244362af';
+String _$videoRepositoryHash() => r'410972c278bce02ce1b470f2a2e6d5cca2346fda';
 
-/// See also [videoRepositoryImpl].
-@ProviderFor(videoRepositoryImpl)
-final videoRepositoryImplProvider =
-    AutoDisposeProvider<VideoRepositoryImpl>.internal(
-      videoRepositoryImpl,
-      name: r'videoRepositoryImplProvider',
-      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-          ? null
-          : _$videoRepositoryImplHash,
-      dependencies: null,
-      allTransitiveDependencies: null,
-    );
-
-@Deprecated('Will be removed in 3.0. Use Ref instead')
-// ignore: unused_element
-typedef VideoRepositoryImplRef = AutoDisposeProviderRef<VideoRepositoryImpl>;
-String _$getVideosUseCaseHash() => r'28b5390142e931eaad88560a053677c54168d582';
-
-/// See also [getVideosUseCase].
-@ProviderFor(getVideosUseCase)
-final getVideosUseCaseProvider = AutoDisposeProvider<GetVideosUSeCase>.internal(
-  getVideosUseCase,
-  name: r'getVideosUseCaseProvider',
+/// See also [videoRepository].
+@ProviderFor(videoRepository)
+final videoRepositoryProvider = Provider<VideoRepository>.internal(
+  videoRepository,
+  name: r'videoRepositoryProvider',
   debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
       ? null
-      : _$getVideosUseCaseHash,
+      : _$videoRepositoryHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
-typedef GetVideosUseCaseRef = AutoDisposeProviderRef<GetVideosUSeCase>;
+typedef VideoRepositoryRef = ProviderRef<VideoRepository>;
 // ignore_for_file: type=lint
 // ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package

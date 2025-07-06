@@ -10,6 +10,7 @@ Dio dio(Ref ref) {
 
   dio.options = BaseOptions(
     baseUrl: Endpoints.baseUrl,
+    responseType: ResponseType.bytes,
     connectTimeout: Duration(seconds: 60),
     headers: {
       "Content-type": "application/json"
@@ -18,6 +19,7 @@ Dio dio(Ref ref) {
 
   dio.interceptors.addAll([
     ExceptionHandlerInterceptor(),
+    Utf8Interceptor(),
     if (kDebugMode) PrettyDioLogger(requestHeader: true, requestBody: true),
   ]);
 

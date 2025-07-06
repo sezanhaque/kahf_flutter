@@ -11,6 +11,8 @@ dependencies:
     sdk: flutter
     
   cupertino_icons: ^1.0.8
+  html: ^0.15.6
+  cached_network_image: ^3.4.1
 
   # State Management
   flutter_riverpod: ^2.6.1

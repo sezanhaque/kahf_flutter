@@ -1,7 +1,6 @@
 import 'dart:math';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:html/parser.dart' as html_parser;
 import 'package:kahf_flutter/src/features/home/data/models/video/video_comment_model.dart';
 import 'package:kahf_flutter/src/core/extensions/format_extensions.dart';
 

@@ -24,7 +24,7 @@ extension ErrorNotifierExtension on WidgetRef {
   void showErrorSnackbar(BuildContext context) {
     final error = watch(errorNotifierProvider);
 
-    if (error != null) {
+    if (error != null && context.mounted) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(

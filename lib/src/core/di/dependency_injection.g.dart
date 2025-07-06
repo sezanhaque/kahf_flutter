@@ -23,7 +23,7 @@ final sharedPreferencesProvider = FutureProvider<SharedPreferences>.internal(
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element
 typedef SharedPreferencesRef = FutureProviderRef<SharedPreferences>;
-String _$dioHash() => r'9c360db17fa61b25f2420ea2d244e1ed80bc855f';
+String _$dioHash() => r'0892b7f5403e3abcca4681bc1523f5a89f8a9083';
 
 /// See also [dio].
 @ProviderFor(dio)

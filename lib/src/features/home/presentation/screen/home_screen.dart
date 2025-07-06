@@ -22,8 +22,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   void initState() {
     super.initState();
 
+    _scrollController.addListener(_onScroll);
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      _scrollController.addListener(_onScroll);
       _loadInitialVideos();
     });
   }
@@ -40,7 +40,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
   }
 
   void _loadInitialVideos() {
-    if (ref.read(videoNotifierProvider) is VideoStateInitial) {
+    if (mounted && ref.read(videoNotifierProvider) is VideoStateInitial) {
       ref.read(videoNotifierProvider.notifier).fetchVideos();
     }
   }
@@ -57,7 +57,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    ref.showErrorSnackbar(context);
     final videoState = ref.watch(videoNotifierProvider);
 
     ref.listen(errorNotifierProvider, (_, next) {

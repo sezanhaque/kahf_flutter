@@ -4,6 +4,7 @@ import 'package:kahf_flutter/src/core/logger/riverpod_log.dart';
 import 'package:kahf_flutter/src/features/home/presentation/screen/home_screen.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(ProviderScope(observers: [RiverpodLog()], child: const MyApp()));
 }
 

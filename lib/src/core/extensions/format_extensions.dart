@@ -1,4 +1,5 @@
 import 'package:html/parser.dart' as html_parser;
+import 'package:intl/intl.dart';
 
 extension StringSanitizer on String? {
   String get safeText {
@@ -49,20 +50,30 @@ extension DurationExtension on Duration {
 
 extension DateTimeExtension on DateTime {
   /// Formats the given [date] as a string in the format "years ago", "months ago", "days ago", "hours ago", "minutes ago"
+  /// 
+  /// or "seconds ago" depending on the time difference from the current time.
+  /// 
+  /// If the time difference is less than a minute, returns "Just now".
   String get timeAgo {
     final now = DateTime.now();
     final difference = now.difference(this);
-    if (difference.inDays > 365) {
-      return '${(difference.inDays / 365).floor()} years ago';
-    } else if (difference.inDays > 30) {
-      return '${(difference.inDays / 30).floor()} months ago';
-    } else if (difference.inDays > 0) {
-      return '${difference.inDays} days ago';
-    } else if (difference.inHours > 0) {
-      return '${difference.inHours} hours ago';
-    } else {
+
+    if (difference.inMinutes < 1) {
+      return 'Just now';
+    } else if (difference.inMinutes < 60) {
       return '${difference.inMinutes} minutes ago';
+    } else if (difference.inHours < 24) {
+      return '${difference.inHours} hours ago';
     }
+    // else if (difference.inDays < 30) {
+    //   return '${difference.inDays} days ago';
+    // } else if (difference.inDays < 365) {
+    //   return '${(difference.inDays / 30).floor()} months ago';
+    // } else {
+    //   return '${(difference.inDays / 365).floor()} years ago';
+    // }
+
+    return DateFormat("MMM d, yyyy").format(this);
   }
 }
 

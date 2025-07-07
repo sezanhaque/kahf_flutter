@@ -10,10 +10,9 @@ class Utf8Interceptor extends Interceptor {
           allowMalformed: true,
         ).convert(response.data);
 
-        final fixedStr = cleanMalformedUtf8(decodedStr);
+        // final fixedStr = cleanMalformedUtf8(decodedStr);
+        final fixedStr = decodedStr.replaceAll('\uFFFD', '').trim();
         final dynamic decodedJson = jsonDecode(fixedStr);
-
-        // final dynamic decodedJson = jsonDecode(decodedStr);
 
         final fixedResponse = Response(
           data: decodedJson,
@@ -44,6 +43,16 @@ class Utf8Interceptor extends Interceptor {
 }
 
 // String cleanMalformedUtf8(String input) {
+//   return input
+//       .replaceAll('\uFFFD', '') // Remove replacement char
+//       .replaceAll(
+//         RegExp(r'[\u0000-\u001F\u007F-\u009F]'),
+//         '',
+//       ) // Invisible control chars
+//       .trim();
+// }
+
+// String cleanMalformedUtf8(String input) {
 //   final originalBytes = input.codeUnits;
 //   final cleanBytes = <int>[];
 
@@ -59,24 +68,24 @@ class Utf8Interceptor extends Interceptor {
 //   return String.fromCharCodes(cleanBytes);
 // }
 
-String cleanMalformedUtf8(String input) {
-  try {
-    // First try normal decoding
-    return input;
-  } catch (e) {
-    // Fallback cleaning
-    final buffer = StringBuffer();
-    for (final char in input.runes) {
-      if (char <= 0xFFFF) {
-        // Basic Multilingual Plane
-        buffer.writeCharCode(char);
-      } else {
-        buffer.write('\uFFFD'); // Replacement char for complex chars
-      }
-    }
-    return buffer
-        .toString()
-        .replaceAll('\uFFFD\uFFFD', '\uFFFD') // Consolidate replacements
-        .replaceAll(RegExp(r'[\x00-\x1F\x7F]'), ''); // Remove controls
-  }
-}
+// String cleanMalformedUtf8(String input) {
+//   try {
+//     // First try normal decoding
+//     return input;
+//   } catch (e) {
+//     // Fallback cleaning
+//     final buffer = StringBuffer();
+//     for (final char in input.runes) {
+//       if (char <= 0xFFFF) {
+//         // Basic Multilingual Plane
+//         buffer.writeCharCode(char);
+//       } else {
+//         buffer.write('\uFFFD'); // Replacement char for complex chars
+//       }
+//     }
+//     return buffer
+//         .toString()
+//         .replaceAll('\uFFFD\uFFFD', '\uFFFD') // Consolidate replacements
+//         .replaceAll(RegExp(r'[\x00-\x1F\x7F]'), ''); // Remove controls
+//   }
+// }

@@ -8,11 +8,11 @@ part 'parts/video_thumbnail_widget.dart';
 part 'parts/video_duration_widget.dart';
 part 'parts/video_info_widget.dart';
 
-
 class VideoCardWidget extends StatelessWidget {
-  final VideoEntity video;
+  final VideoEntity? video;
+  final bool isLoading;
 
-  const VideoCardWidget({super.key, required this.video});
+  const VideoCardWidget({super.key, this.video, this.isLoading = false});
 
   @override
   Widget build(BuildContext context) {
@@ -25,15 +25,13 @@ class VideoCardWidget extends StatelessWidget {
         children: [
           Stack(
             children: [
-              VideoThumbnailWidget(video: video),
-              VideoDurationWidget(video: video),
+              VideoThumbnailWidget(thumbnail: video?.thumbnail, isLoading: isLoading,),
+              VideoDurationWidget(duration: video?.duration, isLoading: isLoading),
             ],
           ),
-          VideoInfoWidget(video: video),
+          VideoInfoWidget(video: video, isLoading: isLoading),
         ],
       ),
     );
   }
 }
-
-

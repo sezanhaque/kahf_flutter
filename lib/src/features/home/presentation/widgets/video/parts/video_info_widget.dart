@@ -1,9 +1,10 @@
 part of '../video_card_widget.dart';
 
 class VideoInfoWidget extends StatelessWidget {
-  const VideoInfoWidget({super.key, required this.video});
+  final VideoEntity? video;
+  final bool isLoading;
 
-  final VideoEntity video;
+  const VideoInfoWidget({super.key, this.video, this.isLoading = false});
 
   @override
   Widget build(BuildContext context) {
@@ -20,19 +21,26 @@ class VideoInfoWidget extends StatelessWidget {
                 ClipPath(
                   clipBehavior: Clip.hardEdge,
                   child: ClipOval(
-                    child: CachedNetworkImage(
-                      imageUrl: video.channelImage,
-                      width: 32,
-                      height: 32,
-                      fit: BoxFit.cover,
-                      placeholder: (context, url) => const SizedBox(
-                        width: 16,
-                        height: 16,
-                        child: CircularProgressIndicator(strokeWidth: 1.5),
-                      ),
-                      errorWidget: (context, url, error) =>
-                          const Icon(Icons.error, size: 16),
-                    ),
+                    child: !isLoading && video?.channelImage != null
+                        ? CachedNetworkImage(
+                            imageUrl: video!.channelImage,
+                            width: 32,
+                            height: 32,
+                            fit: BoxFit.cover,
+                            placeholder: (context, url) => const SizedBox(
+                              width: 16,
+                              height: 16,
+                              child: CircularProgressIndicator(
+                                strokeWidth: 1.5,
+                              ),
+                            ),
+                            errorWidget: (context, url, error) =>
+                                const Icon(Icons.error, size: 16),
+                          )
+                        : CircleAvatar(
+                            backgroundColor: Colors.grey[300],
+                            radius: 16,
+                          ),
                   ),
                 ),
                 const SizedBox(width: 8),
@@ -40,42 +48,67 @@ class VideoInfoWidget extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        video.title,
-                        style: Theme.of(context).textTheme.titleMedium
-                            ?.copyWith(fontWeight: FontWeight.w700),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                      ),
+                      !isLoading && video?.title != null
+                          ? Text(
+                              video!.title,
+                              style: Theme.of(context).textTheme.titleMedium
+                                  ?.copyWith(fontWeight: FontWeight.w700),
+                              maxLines: 2,
+                              overflow: TextOverflow.ellipsis,
+                            )
+                          : Container(
+                              height: 16,
+                              width: double.infinity,
+                              color: Colors.grey[300],
+                            ),
                       const SizedBox(height: 8),
                       Wrap(
                         spacing: 4.0,
                         runSpacing: 4.0,
                         crossAxisAlignment: WrapCrossAlignment.start,
                         children: [
-                          Text(
-                            video.channelName,
-                            style: Theme.of(context).textTheme.bodySmall
-                                ?.copyWith(color: Colors.grey[600]),
-                            overflow: TextOverflow.ellipsis,
-                            maxLines: 1,
-                          ),
-                          if (video.isVerified)
+                          video?.channelName != null
+                              ? Text(
+                                  video!.channelName,
+                                  style: Theme.of(context).textTheme.bodySmall
+                                      ?.copyWith(color: Colors.grey[600]),
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                )
+                              : Container(
+                                  height: 16,
+                                  width: double.infinity,
+                                  color: Colors.grey[300],
+                                ),
+
+                          const SizedBox(height: 2),
+
+                          if (!isLoading && (video?.isVerified ?? false))
                             const Icon(
                               Icons.verified,
                               size: 14,
                               color: Colors.blue,
                             ),
-                          Text(
-                            '. ${video.viewCount.formattedViews} views',
-                            style: Theme.of(context).textTheme.bodySmall
-                                ?.copyWith(color: Colors.grey[600]),
-                          ),
-                          Text(
-                            '. ${video.publishedAt.timeAgo}',
-                            style: Theme.of(context).textTheme.bodySmall
-                                ?.copyWith(color: Colors.grey[600]),
-                          ),
+
+                          if (!isLoading &&
+                              (video?.viewCount != null ||
+                                  video?.publishedAt != null)) ...[
+                            Text(
+                              '. ${video!.viewCount.formattedViews} views',
+                              style: Theme.of(context).textTheme.bodySmall
+                                  ?.copyWith(color: Colors.grey[600]),
+                            ),
+                            Text(
+                              '. ${video!.publishedAt.timeAgo}',
+                              style: Theme.of(context).textTheme.bodySmall
+                                  ?.copyWith(color: Colors.grey[600]),
+                            ),
+                          ] else
+                            Container(
+                              height: 16,
+                              width: double.infinity,
+                              color: Colors.grey[300],
+                            ),
                         ],
                       ),
                     ],
@@ -84,15 +117,20 @@ class VideoInfoWidget extends StatelessWidget {
               ],
             ),
           ),
-          Flexible(
-            child: IconButton(
-              icon: const Icon(Icons.more_vert),
-              color: Colors.grey[600],
-              onPressed: () {
-                _showOptionsModal(context);
-              },
-            ),
-          ),
+
+          isLoading
+              ? SizedBox.shrink()
+              : Flexible(
+                  child: IconButton(
+                    icon: const Icon(Icons.more_vert),
+                    color: Colors.grey[600],
+                    onPressed: isLoading
+                        ? null
+                        : () {
+                            _showOptionsModal(context);
+                          },
+                  ),
+                ),
         ],
       ),
     );

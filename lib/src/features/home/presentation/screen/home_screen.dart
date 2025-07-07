@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kahf_flutter/src/common/widgets/app_loading_indicator.dart';
 import 'package:kahf_flutter/src/features/home/presentation/provider/video_state.dart';
 
 import '../../../../common/widgets/app_error_widget.dart';
+import '../../../../common/widgets/app_loading_indicator.dart';
 import '../../../../core/providers/error_notifier.dart';
 import '../provider/video_notifier.dart';
 import '../widgets/video/video_card_widget.dart';
@@ -76,8 +76,8 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         ],
       ),
       body: videoState.when(
-        initial: () => const Center(child: CircularProgressIndicator()),
-        loading: () => const Center(child: CircularProgressIndicator()),
+        initial: () => _buildShimmerList(),
+        loading: () => _buildShimmerList(),
         error: (message) => Center(
           child: AppErrorWidget(
             error: message,
@@ -131,6 +131,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           );
         },
       ),
+    );
+  }
+
+  Widget _buildShimmerList() {
+    return ListView.builder(
+      itemCount: 6,
+      itemBuilder: (context, index) => const VideoCardWidget(isLoading: true,),
     );
   }
 }

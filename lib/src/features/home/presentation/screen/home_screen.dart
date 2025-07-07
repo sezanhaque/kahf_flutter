@@ -66,12 +66,13 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Mahfil'),
+        centerTitle: true,
         actions: [
           IconButton(
-            icon: const Icon(Icons.refresh),
-            onPressed: () =>
-                ref.read(videoNotifierProvider.notifier).refreshVideos(),
+            icon: const Icon(Icons.notifications_outlined),
+            onPressed: () {},
           ),
+          IconButton(onPressed: () {}, icon: const Icon(Icons.search_outlined)),
         ],
       ),
       body: videoState.when(

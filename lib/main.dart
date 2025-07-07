@@ -17,6 +17,7 @@ class MyApp extends ConsumerWidget {
       title: 'Mahfil',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        useMaterial3: true,
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
       home: HomeScreen(),

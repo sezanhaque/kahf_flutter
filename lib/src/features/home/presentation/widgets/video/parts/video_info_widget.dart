@@ -94,7 +94,7 @@ class VideoInfoWidget extends StatelessWidget {
                               (video?.viewCount != null ||
                                   video?.publishedAt != null)) ...[
                             Text(
-                              '. ${video!.viewCount.formattedViews} views',
+                              '. ${NumberFormat.compact().format(video!.viewCount)} views',
                               style: Theme.of(context).textTheme.bodySmall
                                   ?.copyWith(color: Colors.grey[600]),
                             ),
@@ -126,46 +126,11 @@ class VideoInfoWidget extends StatelessWidget {
                     color: Colors.grey[600],
                     onPressed: isLoading
                         ? null
-                        : () {
-                            _showOptionsModal(context);
-                          },
+                        : () async => await UIUtils.showOptionsModal(context),
                   ),
                 ),
         ],
       ),
-    );
-  }
-
-  void _showOptionsModal(BuildContext context) {
-    showModalBottomSheet(
-      context: context,
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(16)),
-      ),
-      showDragHandle: true,
-      builder: (_) {
-        return SafeArea(
-          child: Wrap(
-            children: [
-              ListTile(
-                leading: const Icon(Icons.share_outlined),
-                title: const Text('Share'),
-                onTap: () => Navigator.pop(context),
-              ),
-              ListTile(
-                leading: const Icon(Icons.favorite_border_outlined),
-                title: const Text('Add to Favorite'),
-                onTap: () => Navigator.pop(context),
-              ),
-              ListTile(
-                leading: const Icon(Icons.flag_outlined),
-                title: const Text('Report'),
-                onTap: () => Navigator.pop(context),
-              ),
-            ],
-          ),
-        );
-      },
     );
   }
 }

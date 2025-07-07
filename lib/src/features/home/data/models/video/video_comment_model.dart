@@ -13,7 +13,7 @@ abstract class VideoCommentModel with _$VideoCommentModel {
     @JsonKey(name: "user_information") required int userInformation,
     @JsonKey(name: "created_at") required DateTime createdAt,
     @JsonKey(name: "user_image") required dynamic userImage,
-    @JsonKey(name: "user_name") required String userName,
+    @JsonKey(name: "user_name") String? userName,
     @JsonKey(name: "replies_count") required int repliesCount,
     @JsonKey(name: "is_like") required bool isLike,
     @JsonKey(name: "is_dislike") required bool isDislike,

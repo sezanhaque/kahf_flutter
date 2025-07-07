@@ -15,7 +15,7 @@ _VideoCommentModel _$VideoCommentModelFromJson(Map<String, dynamic> json) =>
       userInformation: (json['user_information'] as num).toInt(),
       createdAt: DateTime.parse(json['created_at'] as String),
       userImage: json['user_image'],
-      userName: json['user_name'] as String,
+      userName: json['user_name'] as String?,
       repliesCount: (json['replies_count'] as num).toInt(),
       isLike: json['is_like'] as bool,
       isDislike: json['is_dislike'] as bool,

@@ -1,4 +1,5 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:kahf_flutter/src/features/home/data/models/video/video_comment_model.dart';
 
 import '../../data/models/video/video_model.dart';
 
@@ -18,6 +19,10 @@ abstract class VideoEntity with _$VideoEntity {
     required String description,
     required bool isVerified,
     required String channelSlug,
-    required List<Mp4Url> qualities,
+    String? manifest,
+    List<Mp4Url>? qualities,
+    required int mashallah,
+    required int like,
+    List<VideoCommentModel>? comments,
   }) = _VideoEntity;
 }

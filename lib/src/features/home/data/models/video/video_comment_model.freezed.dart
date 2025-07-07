@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$VideoCommentModel {
 
-@JsonKey(name: "comment") String get comment;@JsonKey(name: "id") int get id;@JsonKey(name: "like") int get like;@JsonKey(name: "dislike") int get dislike;@JsonKey(name: "user_information") int get userInformation;@JsonKey(name: "created_at") DateTime get createdAt;@JsonKey(name: "user_image") dynamic get userImage;@JsonKey(name: "user_name") String get userName;@JsonKey(name: "replies_count") int get repliesCount;@JsonKey(name: "is_like") bool get isLike;@JsonKey(name: "is_dislike") bool get isDislike;@JsonKey(name: "is_verified") bool get isVerified;
+@JsonKey(name: "comment") String get comment;@JsonKey(name: "id") int get id;@JsonKey(name: "like") int get like;@JsonKey(name: "dislike") int get dislike;@JsonKey(name: "user_information") int get userInformation;@JsonKey(name: "created_at") DateTime get createdAt;@JsonKey(name: "user_image") dynamic get userImage;@JsonKey(name: "user_name") String? get userName;@JsonKey(name: "replies_count") int get repliesCount;@JsonKey(name: "is_like") bool get isLike;@JsonKey(name: "is_dislike") bool get isDislike;@JsonKey(name: "is_verified") bool get isVerified;
 /// Create a copy of VideoCommentModel
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -48,7 +48,7 @@ abstract mixin class $VideoCommentModelCopyWith<$Res>  {
   factory $VideoCommentModelCopyWith(VideoCommentModel value, $Res Function(VideoCommentModel) _then) = _$VideoCommentModelCopyWithImpl;
 @useResult
 $Res call({
-@JsonKey(name: "comment") String comment,@JsonKey(name: "id") int id,@JsonKey(name: "like") int like,@JsonKey(name: "dislike") int dislike,@JsonKey(name: "user_information") int userInformation,@JsonKey(name: "created_at") DateTime createdAt,@JsonKey(name: "user_image") dynamic userImage,@JsonKey(name: "user_name") String userName,@JsonKey(name: "replies_count") int repliesCount,@JsonKey(name: "is_like") bool isLike,@JsonKey(name: "is_dislike") bool isDislike,@JsonKey(name: "is_verified") bool isVerified
+@JsonKey(name: "comment") String comment,@JsonKey(name: "id") int id,@JsonKey(name: "like") int like,@JsonKey(name: "dislike") int dislike,@JsonKey(name: "user_information") int userInformation,@JsonKey(name: "created_at") DateTime createdAt,@JsonKey(name: "user_image") dynamic userImage,@JsonKey(name: "user_name") String? userName,@JsonKey(name: "replies_count") int repliesCount,@JsonKey(name: "is_like") bool isLike,@JsonKey(name: "is_dislike") bool isDislike,@JsonKey(name: "is_verified") bool isVerified
 });
 
 
@@ -65,7 +65,7 @@ class _$VideoCommentModelCopyWithImpl<$Res>
 
 /// Create a copy of VideoCommentModel
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? comment = null,Object? id = null,Object? like = null,Object? dislike = null,Object? userInformation = null,Object? createdAt = null,Object? userImage = freezed,Object? userName = null,Object? repliesCount = null,Object? isLike = null,Object? isDislike = null,Object? isVerified = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? comment = null,Object? id = null,Object? like = null,Object? dislike = null,Object? userInformation = null,Object? createdAt = null,Object? userImage = freezed,Object? userName = freezed,Object? repliesCount = null,Object? isLike = null,Object? isDislike = null,Object? isVerified = null,}) {
   return _then(_self.copyWith(
 comment: null == comment ? _self.comment : comment // ignore: cast_nullable_to_non_nullable
 as String,id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
@@ -74,8 +74,8 @@ as int,dislike: null == dislike ? _self.dislike : dislike // ignore: cast_nullab
 as int,userInformation: null == userInformation ? _self.userInformation : userInformation // ignore: cast_nullable_to_non_nullable
 as int,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,userImage: freezed == userImage ? _self.userImage : userImage // ignore: cast_nullable_to_non_nullable
-as dynamic,userName: null == userName ? _self.userName : userName // ignore: cast_nullable_to_non_nullable
-as String,repliesCount: null == repliesCount ? _self.repliesCount : repliesCount // ignore: cast_nullable_to_non_nullable
+as dynamic,userName: freezed == userName ? _self.userName : userName // ignore: cast_nullable_to_non_nullable
+as String?,repliesCount: null == repliesCount ? _self.repliesCount : repliesCount // ignore: cast_nullable_to_non_nullable
 as int,isLike: null == isLike ? _self.isLike : isLike // ignore: cast_nullable_to_non_nullable
 as bool,isDislike: null == isDislike ? _self.isDislike : isDislike // ignore: cast_nullable_to_non_nullable
 as bool,isVerified: null == isVerified ? _self.isVerified : isVerified // ignore: cast_nullable_to_non_nullable
@@ -164,7 +164,7 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "comment")  String comment, @JsonKey(name: "id")  int id, @JsonKey(name: "like")  int like, @JsonKey(name: "dislike")  int dislike, @JsonKey(name: "user_information")  int userInformation, @JsonKey(name: "created_at")  DateTime createdAt, @JsonKey(name: "user_image")  dynamic userImage, @JsonKey(name: "user_name")  String userName, @JsonKey(name: "replies_count")  int repliesCount, @JsonKey(name: "is_like")  bool isLike, @JsonKey(name: "is_dislike")  bool isDislike, @JsonKey(name: "is_verified")  bool isVerified)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function(@JsonKey(name: "comment")  String comment, @JsonKey(name: "id")  int id, @JsonKey(name: "like")  int like, @JsonKey(name: "dislike")  int dislike, @JsonKey(name: "user_information")  int userInformation, @JsonKey(name: "created_at")  DateTime createdAt, @JsonKey(name: "user_image")  dynamic userImage, @JsonKey(name: "user_name")  String? userName, @JsonKey(name: "replies_count")  int repliesCount, @JsonKey(name: "is_like")  bool isLike, @JsonKey(name: "is_dislike")  bool isDislike, @JsonKey(name: "is_verified")  bool isVerified)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _VideoCommentModel() when $default != null:
 return $default(_that.comment,_that.id,_that.like,_that.dislike,_that.userInformation,_that.createdAt,_that.userImage,_that.userName,_that.repliesCount,_that.isLike,_that.isDislike,_that.isVerified);case _:
@@ -185,7 +185,7 @@ return $default(_that.comment,_that.id,_that.like,_that.dislike,_that.userInform
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "comment")  String comment, @JsonKey(name: "id")  int id, @JsonKey(name: "like")  int like, @JsonKey(name: "dislike")  int dislike, @JsonKey(name: "user_information")  int userInformation, @JsonKey(name: "created_at")  DateTime createdAt, @JsonKey(name: "user_image")  dynamic userImage, @JsonKey(name: "user_name")  String userName, @JsonKey(name: "replies_count")  int repliesCount, @JsonKey(name: "is_like")  bool isLike, @JsonKey(name: "is_dislike")  bool isDislike, @JsonKey(name: "is_verified")  bool isVerified)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function(@JsonKey(name: "comment")  String comment, @JsonKey(name: "id")  int id, @JsonKey(name: "like")  int like, @JsonKey(name: "dislike")  int dislike, @JsonKey(name: "user_information")  int userInformation, @JsonKey(name: "created_at")  DateTime createdAt, @JsonKey(name: "user_image")  dynamic userImage, @JsonKey(name: "user_name")  String? userName, @JsonKey(name: "replies_count")  int repliesCount, @JsonKey(name: "is_like")  bool isLike, @JsonKey(name: "is_dislike")  bool isDislike, @JsonKey(name: "is_verified")  bool isVerified)  $default,) {final _that = this;
 switch (_that) {
 case _VideoCommentModel():
 return $default(_that.comment,_that.id,_that.like,_that.dislike,_that.userInformation,_that.createdAt,_that.userImage,_that.userName,_that.repliesCount,_that.isLike,_that.isDislike,_that.isVerified);case _:
@@ -205,7 +205,7 @@ return $default(_that.comment,_that.id,_that.like,_that.dislike,_that.userInform
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "comment")  String comment, @JsonKey(name: "id")  int id, @JsonKey(name: "like")  int like, @JsonKey(name: "dislike")  int dislike, @JsonKey(name: "user_information")  int userInformation, @JsonKey(name: "created_at")  DateTime createdAt, @JsonKey(name: "user_image")  dynamic userImage, @JsonKey(name: "user_name")  String userName, @JsonKey(name: "replies_count")  int repliesCount, @JsonKey(name: "is_like")  bool isLike, @JsonKey(name: "is_dislike")  bool isDislike, @JsonKey(name: "is_verified")  bool isVerified)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function(@JsonKey(name: "comment")  String comment, @JsonKey(name: "id")  int id, @JsonKey(name: "like")  int like, @JsonKey(name: "dislike")  int dislike, @JsonKey(name: "user_information")  int userInformation, @JsonKey(name: "created_at")  DateTime createdAt, @JsonKey(name: "user_image")  dynamic userImage, @JsonKey(name: "user_name")  String? userName, @JsonKey(name: "replies_count")  int repliesCount, @JsonKey(name: "is_like")  bool isLike, @JsonKey(name: "is_dislike")  bool isDislike, @JsonKey(name: "is_verified")  bool isVerified)?  $default,) {final _that = this;
 switch (_that) {
 case _VideoCommentModel() when $default != null:
 return $default(_that.comment,_that.id,_that.like,_that.dislike,_that.userInformation,_that.createdAt,_that.userImage,_that.userName,_that.repliesCount,_that.isLike,_that.isDislike,_that.isVerified);case _:
@@ -220,7 +220,7 @@ return $default(_that.comment,_that.id,_that.like,_that.dislike,_that.userInform
 @JsonSerializable()
 
 class _VideoCommentModel implements VideoCommentModel {
-  const _VideoCommentModel({@JsonKey(name: "comment") required this.comment, @JsonKey(name: "id") required this.id, @JsonKey(name: "like") required this.like, @JsonKey(name: "dislike") required this.dislike, @JsonKey(name: "user_information") required this.userInformation, @JsonKey(name: "created_at") required this.createdAt, @JsonKey(name: "user_image") required this.userImage, @JsonKey(name: "user_name") required this.userName, @JsonKey(name: "replies_count") required this.repliesCount, @JsonKey(name: "is_like") required this.isLike, @JsonKey(name: "is_dislike") required this.isDislike, @JsonKey(name: "is_verified") required this.isVerified});
+  const _VideoCommentModel({@JsonKey(name: "comment") required this.comment, @JsonKey(name: "id") required this.id, @JsonKey(name: "like") required this.like, @JsonKey(name: "dislike") required this.dislike, @JsonKey(name: "user_information") required this.userInformation, @JsonKey(name: "created_at") required this.createdAt, @JsonKey(name: "user_image") required this.userImage, @JsonKey(name: "user_name") this.userName, @JsonKey(name: "replies_count") required this.repliesCount, @JsonKey(name: "is_like") required this.isLike, @JsonKey(name: "is_dislike") required this.isDislike, @JsonKey(name: "is_verified") required this.isVerified});
   factory _VideoCommentModel.fromJson(Map<String, dynamic> json) => _$VideoCommentModelFromJson(json);
 
 @override@JsonKey(name: "comment") final  String comment;
@@ -230,7 +230,7 @@ class _VideoCommentModel implements VideoCommentModel {
 @override@JsonKey(name: "user_information") final  int userInformation;
 @override@JsonKey(name: "created_at") final  DateTime createdAt;
 @override@JsonKey(name: "user_image") final  dynamic userImage;
-@override@JsonKey(name: "user_name") final  String userName;
+@override@JsonKey(name: "user_name") final  String? userName;
 @override@JsonKey(name: "replies_count") final  int repliesCount;
 @override@JsonKey(name: "is_like") final  bool isLike;
 @override@JsonKey(name: "is_dislike") final  bool isDislike;
@@ -269,7 +269,7 @@ abstract mixin class _$VideoCommentModelCopyWith<$Res> implements $VideoCommentM
   factory _$VideoCommentModelCopyWith(_VideoCommentModel value, $Res Function(_VideoCommentModel) _then) = __$VideoCommentModelCopyWithImpl;
 @override @useResult
 $Res call({
-@JsonKey(name: "comment") String comment,@JsonKey(name: "id") int id,@JsonKey(name: "like") int like,@JsonKey(name: "dislike") int dislike,@JsonKey(name: "user_information") int userInformation,@JsonKey(name: "created_at") DateTime createdAt,@JsonKey(name: "user_image") dynamic userImage,@JsonKey(name: "user_name") String userName,@JsonKey(name: "replies_count") int repliesCount,@JsonKey(name: "is_like") bool isLike,@JsonKey(name: "is_dislike") bool isDislike,@JsonKey(name: "is_verified") bool isVerified
+@JsonKey(name: "comment") String comment,@JsonKey(name: "id") int id,@JsonKey(name: "like") int like,@JsonKey(name: "dislike") int dislike,@JsonKey(name: "user_information") int userInformation,@JsonKey(name: "created_at") DateTime createdAt,@JsonKey(name: "user_image") dynamic userImage,@JsonKey(name: "user_name") String? userName,@JsonKey(name: "replies_count") int repliesCount,@JsonKey(name: "is_like") bool isLike,@JsonKey(name: "is_dislike") bool isDislike,@JsonKey(name: "is_verified") bool isVerified
 });
 
 
@@ -286,7 +286,7 @@ class __$VideoCommentModelCopyWithImpl<$Res>
 
 /// Create a copy of VideoCommentModel
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? comment = null,Object? id = null,Object? like = null,Object? dislike = null,Object? userInformation = null,Object? createdAt = null,Object? userImage = freezed,Object? userName = null,Object? repliesCount = null,Object? isLike = null,Object? isDislike = null,Object? isVerified = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? comment = null,Object? id = null,Object? like = null,Object? dislike = null,Object? userInformation = null,Object? createdAt = null,Object? userImage = freezed,Object? userName = freezed,Object? repliesCount = null,Object? isLike = null,Object? isDislike = null,Object? isVerified = null,}) {
   return _then(_VideoCommentModel(
 comment: null == comment ? _self.comment : comment // ignore: cast_nullable_to_non_nullable
 as String,id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
@@ -295,8 +295,8 @@ as int,dislike: null == dislike ? _self.dislike : dislike // ignore: cast_nullab
 as int,userInformation: null == userInformation ? _self.userInformation : userInformation // ignore: cast_nullable_to_non_nullable
 as int,createdAt: null == createdAt ? _self.createdAt : createdAt // ignore: cast_nullable_to_non_nullable
 as DateTime,userImage: freezed == userImage ? _self.userImage : userImage // ignore: cast_nullable_to_non_nullable
-as dynamic,userName: null == userName ? _self.userName : userName // ignore: cast_nullable_to_non_nullable
-as String,repliesCount: null == repliesCount ? _self.repliesCount : repliesCount // ignore: cast_nullable_to_non_nullable
+as dynamic,userName: freezed == userName ? _self.userName : userName // ignore: cast_nullable_to_non_nullable
+as String?,repliesCount: null == repliesCount ? _self.repliesCount : repliesCount // ignore: cast_nullable_to_non_nullable
 as int,isLike: null == isLike ? _self.isLike : isLike // ignore: cast_nullable_to_non_nullable
 as bool,isDislike: null == isDislike ? _self.isDislike : isDislike // ignore: cast_nullable_to_non_nullable
 as bool,isVerified: null == isVerified ? _self.isVerified : isVerified // ignore: cast_nullable_to_non_nullable

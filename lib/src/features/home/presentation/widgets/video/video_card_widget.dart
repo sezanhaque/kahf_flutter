@@ -1,6 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:kahf_flutter/src/core/extensions/format_extensions.dart';
+import 'package:kahf_flutter/src/core/utils/ui_utils.dart';
+import 'package:kahf_flutter/src/features/home/presentation/screen/video_player_screen.dart';
 
 import '../../../domain/entities/video_entity.dart';
 
@@ -16,21 +19,37 @@ class VideoCardWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-      color: Theme.of(context).cardColor,
-      elevation: 0,
-      margin: const EdgeInsets.all(8.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Stack(
-            children: [
-              VideoThumbnailWidget(thumbnail: video?.thumbnail, isLoading: isLoading,),
-              VideoDurationWidget(duration: video?.duration, isLoading: isLoading),
-            ],
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => VideoPlayerScreen(video: video!),
           ),
-          VideoInfoWidget(video: video, isLoading: isLoading),
-        ],
+        );
+      },
+      child: Card(
+        color: Theme.of(context).cardColor,
+        elevation: 0,
+        margin: const EdgeInsets.all(8.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Stack(
+              children: [
+                VideoThumbnailWidget(
+                  thumbnail: video?.thumbnail,
+                  isLoading: isLoading,
+                ),
+                VideoDurationWidget(
+                  duration: video?.duration,
+                  isLoading: isLoading,
+                ),
+              ],
+            ),
+            VideoInfoWidget(video: video, isLoading: isLoading),
+          ],
+        ),
       ),
     );
   }

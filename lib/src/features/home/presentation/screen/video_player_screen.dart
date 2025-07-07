@@ -1,0 +1,335 @@
+import 'dart:math';
+
+import 'package:better_player_plus/better_player_plus.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
+import 'package:kahf_flutter/src/core/extensions/format_extensions.dart';
+import 'package:kahf_flutter/src/core/utils/ui_utils.dart';
+import 'package:kahf_flutter/src/features/home/data/models/video/video_comment_model.dart';
+
+import '../../domain/entities/video_entity.dart';
+
+class VideoPlayerScreen extends ConsumerStatefulWidget {
+  final VideoEntity video;
+
+  const VideoPlayerScreen({super.key, required this.video});
+
+  @override
+  ConsumerState<VideoPlayerScreen> createState() => _VideoPlayerScreenState();
+}
+
+class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen> {
+  late BetterPlayerController _betterPlayerController;
+  final TextEditingController _commentController = TextEditingController();
+  final FocusNode _commentFocusNode = FocusNode();
+  bool _isSubscribed = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializePlayer();
+  }
+
+  void _initializePlayer() {
+    BetterPlayerConfiguration betterPlayerConfiguration =
+        BetterPlayerConfiguration(
+          aspectRatio: 16 / 9,
+          fit: BoxFit.contain,
+          autoPlay: true,
+          autoDetectFullscreenDeviceOrientation: true,
+          allowedScreenSleep: false,
+          fullScreenAspectRatio: 16 / 9,
+          controlsConfiguration: BetterPlayerControlsConfiguration(
+            enableMute: true,
+            enableOverflowMenu: true,
+            enablePlayPause: true,
+            enableFullscreen: true,
+            enableSubtitles: true,
+            enableAudioTracks: true,
+            enableQualities: true,
+            enableProgressText: true,
+            enablePlaybackSpeed: true,
+          ),
+        );
+
+    BetterPlayerDataSource betterPlayerDataSource = BetterPlayerDataSource(
+      BetterPlayerDataSourceType.network,
+      widget.video.manifest ?? widget.video.qualities?.first.videoUrl ?? '',
+    );
+
+    _betterPlayerController = BetterPlayerController(betterPlayerConfiguration);
+    _betterPlayerController.setupDataSource(betterPlayerDataSource);
+  }
+
+  @override
+  void dispose() {
+    _betterPlayerController.dispose();
+    _commentController.dispose();
+    _commentFocusNode.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            // Video Player
+            AspectRatio(
+              aspectRatio: 16 / 9,
+              child: BetterPlayer(controller: _betterPlayerController),
+            ),
+
+            // Video Info
+            Padding(
+              padding: const EdgeInsets.all(16),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Video Title
+                  Text(
+                    widget.video.title,
+                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+
+                  // Views and Time
+                  Row(
+                    children: [
+                      Text(
+                        '${NumberFormat.compact().format(widget.video.viewCount)} views',
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        ' ${widget.video.publishedAt.timeAgo}',
+                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  const SizedBox(height: 16),
+
+                  // Action Buttons
+                  SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    child: Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: [
+                        _buildActionButton(
+                          icon: Icons.favorite_border,
+                          label: 'MASHALLAH (${widget.video.mashallah})',
+                        ),
+                        _buildActionButton(
+                          icon: Icons.thumb_up_alt_outlined,
+                          label: 'LIKE (${widget.video.like})',
+                        ),
+                        _buildActionButton(
+                          icon: Icons.download_outlined,
+                          label: 'Download',
+                        ),
+                        _buildActionButton(
+                          icon: Icons.more_vert,
+                          label: 'More',
+                          onPressed: () async {
+                            await UIUtils.showOptionsModal(context);
+                          },
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+
+                  // Comments Section
+                  Text(
+                    '${widget.video.comments?.length ?? 0} Comments',
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Comment Input
+                  TextField(
+                    controller: _commentController,
+                    focusNode: _commentFocusNode,
+                    decoration: InputDecoration(
+                      hintText: 'Add a comment...',
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(25),
+                        borderSide: BorderSide.none,
+                      ),
+                      filled: true,
+                      fillColor: Colors.grey[200],
+                      contentPadding: const EdgeInsets.symmetric(
+                        horizontal: 16,
+                        vertical: 12,
+                      ),
+                      suffixIcon: IconButton(
+                        icon: const Icon(Icons.send),
+                        onPressed: _postComment,
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+
+                  // Comments List
+                  if (widget.video.comments == null ||
+                      widget.video.comments!.isEmpty)
+                    _buildEmptyComments()
+                  else
+                    ...widget.video.comments!.map(
+                      (comment) => _buildCommentItem(comment),
+                    ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildActionButton({
+    required IconData icon,
+    required String label,
+    VoidCallback? onPressed,
+  }) {
+    return InkWell(
+      onTap: onPressed ?? () {},
+      splashColor: Colors.grey[300],
+      borderRadius: const BorderRadius.all(Radius.circular(8)),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey[300]!, width: 1),
+          borderRadius: const BorderRadius.all(Radius.circular(8)),
+        ),
+        child: Column(
+          children: [
+            Icon(icon, size: 24, color: Colors.grey[800]),
+            const SizedBox(height: 4),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: Colors.grey[800],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildCommentItem(VideoCommentModel comment) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          CircleAvatar(
+            radius: 20,
+            backgroundImage: CachedNetworkImageProvider(comment.userImage),
+          ),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  comment.userName ?? 'Unknown User',
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 14,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(comment.comment),
+                const SizedBox(height: 4),
+                Row(
+                  children: [
+                    Text(
+                      comment.createdAt.timeAgo,
+                      style: TextStyle(color: Colors.grey[600], fontSize: 12),
+                    ),
+                    const SizedBox(width: 16),
+                    const Icon(Icons.thumb_up_alt_outlined, size: 16),
+                    const SizedBox(width: 4),
+                    Text(
+                      NumberFormat.compact().format(comment.like),
+                      style: TextStyle(color: Colors.grey[600], fontSize: 12),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildEmptyComments() {
+    return Center(
+      child: Column(
+        children: [
+          const SizedBox(height: 40),
+          Container(
+            width: 80,
+            height: 80,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: Colors.grey[200],
+            ),
+            child: const Icon(Icons.mode_comment_outlined, size: 40),
+          ),
+          const SizedBox(height: 16),
+          const Text('Be the first to comment', style: TextStyle(fontSize: 16)),
+          const SizedBox(height: 8),
+          const Text(
+            'Start a conversation with the community',
+            style: TextStyle(fontSize: 14, color: Colors.grey),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _postComment() {
+    if (_commentController.text.trim().isEmpty) return;
+
+    // In a real app, you would call your API here
+    final newComment = VideoCommentModel(
+      id: Random().nextInt(100),
+      comment: _commentController.text,
+      like: 0,
+      dislike: 0,
+      userInformation: 123,
+      createdAt: DateTime.now(),
+      userImage: 'https://example.com/avatar.jpg',
+      repliesCount: 0,
+      isLike: false,
+      isDislike: false,
+      isVerified: true,
+    );
+
+    setState(() {
+      widget.video.comments?.insert(0, newComment);
+    });
+
+    _commentController.clear();
+    _commentFocusNode.unfocus();
+  }
+}

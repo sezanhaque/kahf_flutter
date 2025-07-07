@@ -70,7 +70,11 @@ extension EntityMapper on VideoModel {
       description: description.stripHtml,
       isVerified: isVerified,
       channelSlug: channelSlug,
-      qualities: mp4Urls?.toList() ?? [],
+      manifest: manifest,
+      qualities: mp4Urls?.toList(),
+      mashallah: mashallah ?? 0,
+      like: like ?? 0,
+      comments: comments
     );
   }
 }
@@ -127,7 +131,6 @@ enum StreamingProvider {
 }
 
 final streamingProviderValues = EnumValues({"bunny": StreamingProvider.BUNNY});
-
 
 enum StreamingType {
   @JsonValue("mp4")

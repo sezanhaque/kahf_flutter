@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$VideoEntity {
 
- int get id; String get title; String get thumbnail; String get channelName; String get channelImage; int get viewCount; DateTime get publishedAt; Duration get duration; String get description; bool get isVerified; String get channelSlug; List<Mp4Url> get qualities;
+ int get id; String get title; String get thumbnail; String get channelName; String get channelImage; int get viewCount; DateTime get publishedAt; Duration get duration; String get description; bool get isVerified; String get channelSlug; String? get manifest; List<Mp4Url>? get qualities; int get mashallah; int get like; List<VideoCommentModel>? get comments;
 /// Create a copy of VideoEntity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $VideoEntityCopyWith<VideoEntity> get copyWith => _$VideoEntityCopyWithImpl<Vide
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is VideoEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.thumbnail, thumbnail) || other.thumbnail == thumbnail)&&(identical(other.channelName, channelName) || other.channelName == channelName)&&(identical(other.channelImage, channelImage) || other.channelImage == channelImage)&&(identical(other.viewCount, viewCount) || other.viewCount == viewCount)&&(identical(other.publishedAt, publishedAt) || other.publishedAt == publishedAt)&&(identical(other.duration, duration) || other.duration == duration)&&(identical(other.description, description) || other.description == description)&&(identical(other.isVerified, isVerified) || other.isVerified == isVerified)&&(identical(other.channelSlug, channelSlug) || other.channelSlug == channelSlug)&&const DeepCollectionEquality().equals(other.qualities, qualities));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is VideoEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.thumbnail, thumbnail) || other.thumbnail == thumbnail)&&(identical(other.channelName, channelName) || other.channelName == channelName)&&(identical(other.channelImage, channelImage) || other.channelImage == channelImage)&&(identical(other.viewCount, viewCount) || other.viewCount == viewCount)&&(identical(other.publishedAt, publishedAt) || other.publishedAt == publishedAt)&&(identical(other.duration, duration) || other.duration == duration)&&(identical(other.description, description) || other.description == description)&&(identical(other.isVerified, isVerified) || other.isVerified == isVerified)&&(identical(other.channelSlug, channelSlug) || other.channelSlug == channelSlug)&&(identical(other.manifest, manifest) || other.manifest == manifest)&&const DeepCollectionEquality().equals(other.qualities, qualities)&&(identical(other.mashallah, mashallah) || other.mashallah == mashallah)&&(identical(other.like, like) || other.like == like)&&const DeepCollectionEquality().equals(other.comments, comments));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,title,thumbnail,channelName,channelImage,viewCount,publishedAt,duration,description,isVerified,channelSlug,const DeepCollectionEquality().hash(qualities));
+int get hashCode => Object.hash(runtimeType,id,title,thumbnail,channelName,channelImage,viewCount,publishedAt,duration,description,isVerified,channelSlug,manifest,const DeepCollectionEquality().hash(qualities),mashallah,like,const DeepCollectionEquality().hash(comments));
 
 @override
 String toString() {
-  return 'VideoEntity(id: $id, title: $title, thumbnail: $thumbnail, channelName: $channelName, channelImage: $channelImage, viewCount: $viewCount, publishedAt: $publishedAt, duration: $duration, description: $description, isVerified: $isVerified, channelSlug: $channelSlug, qualities: $qualities)';
+  return 'VideoEntity(id: $id, title: $title, thumbnail: $thumbnail, channelName: $channelName, channelImage: $channelImage, viewCount: $viewCount, publishedAt: $publishedAt, duration: $duration, description: $description, isVerified: $isVerified, channelSlug: $channelSlug, manifest: $manifest, qualities: $qualities, mashallah: $mashallah, like: $like, comments: $comments)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $VideoEntityCopyWith<$Res>  {
   factory $VideoEntityCopyWith(VideoEntity value, $Res Function(VideoEntity) _then) = _$VideoEntityCopyWithImpl;
 @useResult
 $Res call({
- int id, String title, String thumbnail, String channelName, String channelImage, int viewCount, DateTime publishedAt, Duration duration, String description, bool isVerified, String channelSlug, List<Mp4Url> qualities
+ int id, String title, String thumbnail, String channelName, String channelImage, int viewCount, DateTime publishedAt, Duration duration, String description, bool isVerified, String channelSlug, String? manifest, List<Mp4Url>? qualities, int mashallah, int like, List<VideoCommentModel>? comments
 });
 
 
@@ -62,7 +62,7 @@ class _$VideoEntityCopyWithImpl<$Res>
 
 /// Create a copy of VideoEntity
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? thumbnail = null,Object? channelName = null,Object? channelImage = null,Object? viewCount = null,Object? publishedAt = null,Object? duration = null,Object? description = null,Object? isVerified = null,Object? channelSlug = null,Object? qualities = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? title = null,Object? thumbnail = null,Object? channelName = null,Object? channelImage = null,Object? viewCount = null,Object? publishedAt = null,Object? duration = null,Object? description = null,Object? isVerified = null,Object? channelSlug = null,Object? manifest = freezed,Object? qualities = freezed,Object? mashallah = null,Object? like = null,Object? comments = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
@@ -75,8 +75,12 @@ as DateTime,duration: null == duration ? _self.duration : duration // ignore: ca
 as Duration,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String,isVerified: null == isVerified ? _self.isVerified : isVerified // ignore: cast_nullable_to_non_nullable
 as bool,channelSlug: null == channelSlug ? _self.channelSlug : channelSlug // ignore: cast_nullable_to_non_nullable
-as String,qualities: null == qualities ? _self.qualities : qualities // ignore: cast_nullable_to_non_nullable
-as List<Mp4Url>,
+as String,manifest: freezed == manifest ? _self.manifest : manifest // ignore: cast_nullable_to_non_nullable
+as String?,qualities: freezed == qualities ? _self.qualities : qualities // ignore: cast_nullable_to_non_nullable
+as List<Mp4Url>?,mashallah: null == mashallah ? _self.mashallah : mashallah // ignore: cast_nullable_to_non_nullable
+as int,like: null == like ? _self.like : like // ignore: cast_nullable_to_non_nullable
+as int,comments: freezed == comments ? _self.comments : comments // ignore: cast_nullable_to_non_nullable
+as List<VideoCommentModel>?,
   ));
 }
 
@@ -161,10 +165,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String title,  String thumbnail,  String channelName,  String channelImage,  int viewCount,  DateTime publishedAt,  Duration duration,  String description,  bool isVerified,  String channelSlug,  List<Mp4Url> qualities)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( int id,  String title,  String thumbnail,  String channelName,  String channelImage,  int viewCount,  DateTime publishedAt,  Duration duration,  String description,  bool isVerified,  String channelSlug,  String? manifest,  List<Mp4Url>? qualities,  int mashallah,  int like,  List<VideoCommentModel>? comments)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _VideoEntity() when $default != null:
-return $default(_that.id,_that.title,_that.thumbnail,_that.channelName,_that.channelImage,_that.viewCount,_that.publishedAt,_that.duration,_that.description,_that.isVerified,_that.channelSlug,_that.qualities);case _:
+return $default(_that.id,_that.title,_that.thumbnail,_that.channelName,_that.channelImage,_that.viewCount,_that.publishedAt,_that.duration,_that.description,_that.isVerified,_that.channelSlug,_that.manifest,_that.qualities,_that.mashallah,_that.like,_that.comments);case _:
   return orElse();
 
 }
@@ -182,10 +186,10 @@ return $default(_that.id,_that.title,_that.thumbnail,_that.channelName,_that.cha
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String title,  String thumbnail,  String channelName,  String channelImage,  int viewCount,  DateTime publishedAt,  Duration duration,  String description,  bool isVerified,  String channelSlug,  List<Mp4Url> qualities)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( int id,  String title,  String thumbnail,  String channelName,  String channelImage,  int viewCount,  DateTime publishedAt,  Duration duration,  String description,  bool isVerified,  String channelSlug,  String? manifest,  List<Mp4Url>? qualities,  int mashallah,  int like,  List<VideoCommentModel>? comments)  $default,) {final _that = this;
 switch (_that) {
 case _VideoEntity():
-return $default(_that.id,_that.title,_that.thumbnail,_that.channelName,_that.channelImage,_that.viewCount,_that.publishedAt,_that.duration,_that.description,_that.isVerified,_that.channelSlug,_that.qualities);case _:
+return $default(_that.id,_that.title,_that.thumbnail,_that.channelName,_that.channelImage,_that.viewCount,_that.publishedAt,_that.duration,_that.description,_that.isVerified,_that.channelSlug,_that.manifest,_that.qualities,_that.mashallah,_that.like,_that.comments);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -202,10 +206,10 @@ return $default(_that.id,_that.title,_that.thumbnail,_that.channelName,_that.cha
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String title,  String thumbnail,  String channelName,  String channelImage,  int viewCount,  DateTime publishedAt,  Duration duration,  String description,  bool isVerified,  String channelSlug,  List<Mp4Url> qualities)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( int id,  String title,  String thumbnail,  String channelName,  String channelImage,  int viewCount,  DateTime publishedAt,  Duration duration,  String description,  bool isVerified,  String channelSlug,  String? manifest,  List<Mp4Url>? qualities,  int mashallah,  int like,  List<VideoCommentModel>? comments)?  $default,) {final _that = this;
 switch (_that) {
 case _VideoEntity() when $default != null:
-return $default(_that.id,_that.title,_that.thumbnail,_that.channelName,_that.channelImage,_that.viewCount,_that.publishedAt,_that.duration,_that.description,_that.isVerified,_that.channelSlug,_that.qualities);case _:
+return $default(_that.id,_that.title,_that.thumbnail,_that.channelName,_that.channelImage,_that.viewCount,_that.publishedAt,_that.duration,_that.description,_that.isVerified,_that.channelSlug,_that.manifest,_that.qualities,_that.mashallah,_that.like,_that.comments);case _:
   return null;
 
 }
@@ -217,7 +221,7 @@ return $default(_that.id,_that.title,_that.thumbnail,_that.channelName,_that.cha
 
 
 class _VideoEntity implements VideoEntity {
-  const _VideoEntity({required this.id, required this.title, required this.thumbnail, required this.channelName, required this.channelImage, required this.viewCount, required this.publishedAt, required this.duration, required this.description, required this.isVerified, required this.channelSlug, required final  List<Mp4Url> qualities}): _qualities = qualities;
+  const _VideoEntity({required this.id, required this.title, required this.thumbnail, required this.channelName, required this.channelImage, required this.viewCount, required this.publishedAt, required this.duration, required this.description, required this.isVerified, required this.channelSlug, this.manifest, final  List<Mp4Url>? qualities, required this.mashallah, required this.like, final  List<VideoCommentModel>? comments}): _qualities = qualities,_comments = comments;
   
 
 @override final  int id;
@@ -231,11 +235,25 @@ class _VideoEntity implements VideoEntity {
 @override final  String description;
 @override final  bool isVerified;
 @override final  String channelSlug;
- final  List<Mp4Url> _qualities;
-@override List<Mp4Url> get qualities {
+@override final  String? manifest;
+ final  List<Mp4Url>? _qualities;
+@override List<Mp4Url>? get qualities {
+  final value = _qualities;
+  if (value == null) return null;
   if (_qualities is EqualUnmodifiableListView) return _qualities;
   // ignore: implicit_dynamic_type
-  return EqualUnmodifiableListView(_qualities);
+  return EqualUnmodifiableListView(value);
+}
+
+@override final  int mashallah;
+@override final  int like;
+ final  List<VideoCommentModel>? _comments;
+@override List<VideoCommentModel>? get comments {
+  final value = _comments;
+  if (value == null) return null;
+  if (_comments is EqualUnmodifiableListView) return _comments;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(value);
 }
 
 
@@ -249,16 +267,16 @@ _$VideoEntityCopyWith<_VideoEntity> get copyWith => __$VideoEntityCopyWithImpl<_
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _VideoEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.thumbnail, thumbnail) || other.thumbnail == thumbnail)&&(identical(other.channelName, channelName) || other.channelName == channelName)&&(identical(other.channelImage, channelImage) || other.channelImage == channelImage)&&(identical(other.viewCount, viewCount) || other.viewCount == viewCount)&&(identical(other.publishedAt, publishedAt) || other.publishedAt == publishedAt)&&(identical(other.duration, duration) || other.duration == duration)&&(identical(other.description, description) || other.description == description)&&(identical(other.isVerified, isVerified) || other.isVerified == isVerified)&&(identical(other.channelSlug, channelSlug) || other.channelSlug == channelSlug)&&const DeepCollectionEquality().equals(other._qualities, _qualities));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _VideoEntity&&(identical(other.id, id) || other.id == id)&&(identical(other.title, title) || other.title == title)&&(identical(other.thumbnail, thumbnail) || other.thumbnail == thumbnail)&&(identical(other.channelName, channelName) || other.channelName == channelName)&&(identical(other.channelImage, channelImage) || other.channelImage == channelImage)&&(identical(other.viewCount, viewCount) || other.viewCount == viewCount)&&(identical(other.publishedAt, publishedAt) || other.publishedAt == publishedAt)&&(identical(other.duration, duration) || other.duration == duration)&&(identical(other.description, description) || other.description == description)&&(identical(other.isVerified, isVerified) || other.isVerified == isVerified)&&(identical(other.channelSlug, channelSlug) || other.channelSlug == channelSlug)&&(identical(other.manifest, manifest) || other.manifest == manifest)&&const DeepCollectionEquality().equals(other._qualities, _qualities)&&(identical(other.mashallah, mashallah) || other.mashallah == mashallah)&&(identical(other.like, like) || other.like == like)&&const DeepCollectionEquality().equals(other._comments, _comments));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,title,thumbnail,channelName,channelImage,viewCount,publishedAt,duration,description,isVerified,channelSlug,const DeepCollectionEquality().hash(_qualities));
+int get hashCode => Object.hash(runtimeType,id,title,thumbnail,channelName,channelImage,viewCount,publishedAt,duration,description,isVerified,channelSlug,manifest,const DeepCollectionEquality().hash(_qualities),mashallah,like,const DeepCollectionEquality().hash(_comments));
 
 @override
 String toString() {
-  return 'VideoEntity(id: $id, title: $title, thumbnail: $thumbnail, channelName: $channelName, channelImage: $channelImage, viewCount: $viewCount, publishedAt: $publishedAt, duration: $duration, description: $description, isVerified: $isVerified, channelSlug: $channelSlug, qualities: $qualities)';
+  return 'VideoEntity(id: $id, title: $title, thumbnail: $thumbnail, channelName: $channelName, channelImage: $channelImage, viewCount: $viewCount, publishedAt: $publishedAt, duration: $duration, description: $description, isVerified: $isVerified, channelSlug: $channelSlug, manifest: $manifest, qualities: $qualities, mashallah: $mashallah, like: $like, comments: $comments)';
 }
 
 
@@ -269,7 +287,7 @@ abstract mixin class _$VideoEntityCopyWith<$Res> implements $VideoEntityCopyWith
   factory _$VideoEntityCopyWith(_VideoEntity value, $Res Function(_VideoEntity) _then) = __$VideoEntityCopyWithImpl;
 @override @useResult
 $Res call({
- int id, String title, String thumbnail, String channelName, String channelImage, int viewCount, DateTime publishedAt, Duration duration, String description, bool isVerified, String channelSlug, List<Mp4Url> qualities
+ int id, String title, String thumbnail, String channelName, String channelImage, int viewCount, DateTime publishedAt, Duration duration, String description, bool isVerified, String channelSlug, String? manifest, List<Mp4Url>? qualities, int mashallah, int like, List<VideoCommentModel>? comments
 });
 
 
@@ -286,7 +304,7 @@ class __$VideoEntityCopyWithImpl<$Res>
 
 /// Create a copy of VideoEntity
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? thumbnail = null,Object? channelName = null,Object? channelImage = null,Object? viewCount = null,Object? publishedAt = null,Object? duration = null,Object? description = null,Object? isVerified = null,Object? channelSlug = null,Object? qualities = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? title = null,Object? thumbnail = null,Object? channelName = null,Object? channelImage = null,Object? viewCount = null,Object? publishedAt = null,Object? duration = null,Object? description = null,Object? isVerified = null,Object? channelSlug = null,Object? manifest = freezed,Object? qualities = freezed,Object? mashallah = null,Object? like = null,Object? comments = freezed,}) {
   return _then(_VideoEntity(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as int,title: null == title ? _self.title : title // ignore: cast_nullable_to_non_nullable
@@ -299,8 +317,12 @@ as DateTime,duration: null == duration ? _self.duration : duration // ignore: ca
 as Duration,description: null == description ? _self.description : description // ignore: cast_nullable_to_non_nullable
 as String,isVerified: null == isVerified ? _self.isVerified : isVerified // ignore: cast_nullable_to_non_nullable
 as bool,channelSlug: null == channelSlug ? _self.channelSlug : channelSlug // ignore: cast_nullable_to_non_nullable
-as String,qualities: null == qualities ? _self._qualities : qualities // ignore: cast_nullable_to_non_nullable
-as List<Mp4Url>,
+as String,manifest: freezed == manifest ? _self.manifest : manifest // ignore: cast_nullable_to_non_nullable
+as String?,qualities: freezed == qualities ? _self._qualities : qualities // ignore: cast_nullable_to_non_nullable
+as List<Mp4Url>?,mashallah: null == mashallah ? _self.mashallah : mashallah // ignore: cast_nullable_to_non_nullable
+as int,like: null == like ? _self.like : like // ignore: cast_nullable_to_non_nullable
+as int,comments: freezed == comments ? _self._comments : comments // ignore: cast_nullable_to_non_nullable
+as List<VideoCommentModel>?,
   ));
 }
 

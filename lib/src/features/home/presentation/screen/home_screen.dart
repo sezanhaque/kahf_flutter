@@ -126,104 +126,115 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           IconButton(onPressed: () {}, icon: const Icon(Icons.search_outlined)),
         ],
       ),
-      body: videoState.when(
-        initial: () => _buildShimmerList(),
-        loading: () => _buildShimmerList(),
-        error: (message) => Center(
-          child: AppErrorWidget(
-            error: message,
-            onRetry: () =>
-                ref.read(videoNotifierProvider.notifier).refreshVideos(),
-          ),
-        ),
-        success: (videos, currentPage, totalVideos, hasMore, isLoadingMore) {
-          if (videos.isEmpty) {
-            return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+      body: Stack(
+        children: [
+          videoState.when(
+            initial: () => _buildShimmerList(),
+            loading: () => _buildShimmerList(),
+            error: (message) => Center(
+              child: AppErrorWidget(
+                error: message,
+                onRetry: () =>
+                    ref.read(videoNotifierProvider.notifier).refreshVideos(),
+              ),
+            ),
+            success: (videos, currentPage, totalVideos, hasMore, isLoadingMore) {
+              if (videos.isEmpty) {
+                return Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text('No videos found'),
+                      TextButton(
+                        onPressed: () => ref
+                            .read(videoNotifierProvider.notifier)
+                            .refreshVideos(),
+                        child: const Text('Retry'),
+                      ),
+                    ],
+                  ),
+                );
+              }
+
+              return Stack(
                 children: [
-                  const Text('No videos found'),
-                  TextButton(
-                    onPressed: () => ref
+                  RefreshIndicator(
+                    onRefresh: () => ref
                         .read(videoNotifierProvider.notifier)
                         .refreshVideos(),
-                    child: const Text('Retry'),
-                  ),
-                ],
-              ),
-            );
-          }
+                    child: CustomScrollView(
+                      physics: BouncingScrollPhysics(),
+                      controller: _scrollController,
+                      slivers: [
+                        SliverList(
+                          delegate: SliverChildBuilderDelegate((
+                            context,
+                            index,
+                          ) {
+                            if (index < videos.length) {
+                              // return VideoCardWidget(video: videos[index]);
 
-          return Stack(
-            children: [
-              RefreshIndicator(
-                onRefresh: () =>
-                    ref.read(videoNotifierProvider.notifier).refreshVideos(),
-                child: CustomScrollView(
-                  physics: BouncingScrollPhysics(),
-                  controller: _scrollController,
-                  slivers: [
-                    SliverList(
-                      delegate: SliverChildBuilderDelegate((context, index) {
-                        if (index < videos.length) {
-                          // return VideoCardWidget(video: videos[index]);
-
-                          return GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => VideoPlayerScreen(
-                                    video: videos[index],
-                                    onMinimize: () =>
-                                        _showMiniPlayer(videos[index]),
+                              return GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => VideoPlayerScreen(
+                                        video: videos[index],
+                                        onMinimize: () =>
+                                            _showMiniPlayer(videos[index]),
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: Card(
+                                  color: UIUtils.appBackgroundColor,
+                                  elevation: 0,
+                                  margin: const EdgeInsets.all(8.0),
+                                  child: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Stack(
+                                        children: [
+                                          VideoThumbnailWidget(
+                                            thumbnail: videos[index].thumbnail,
+                                          ),
+                                          VideoDurationWidget(
+                                            duration: videos[index].duration,
+                                          ),
+                                        ],
+                                      ),
+                                      VideoInfoWidget(video: videos[index]),
+                                    ],
                                   ),
                                 ),
                               );
-                            },
-                            child: Card(
-                              color: UIUtils.appBackgroundColor,
-                              elevation: 0,
-                              margin: const EdgeInsets.all(8.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Stack(
-                                    children: [
-                                      VideoThumbnailWidget(
-                                        thumbnail: videos[index].thumbnail,
-                                      ),
-                                      VideoDurationWidget(
-                                        duration: videos[index].duration,
-                                      ),
-                                    ],
-                                  ),
-                                  VideoInfoWidget(video: videos[index]),
-                                ],
+                            }
+
+                            return Padding(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 32.0,
                               ),
-                            ),
-                          );
-                        }
-
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(vertical: 32.0),
-                          child: Center(
-                            child: isLoadingMore
-                                ? const AppLoadingIndicator()
-                                : const SizedBox(),
-                          ),
-                        );
-                      }, childCount: videos.length + (hasMore ? 1 : 0)),
+                              child: Center(
+                                child: isLoadingMore
+                                    ? const AppLoadingIndicator()
+                                    : const SizedBox(),
+                              ),
+                            );
+                          }, childCount: videos.length + (hasMore ? 1 : 0)),
+                        ),
+                      ],
                     ),
-                  ],
-                ),
-              ),
+                  ),
+                ],
+              );
+            },
+          ),
 
-              // Mini Player at bottom
-              if (_currentMiniPlayerVideo != null) _buildMiniPlayer(),
-            ],
-          );
-        },
+          // Mini Player at bottom
+          if (_currentMiniPlayerVideo != null) _buildMiniPlayer(),
+        ],
       ),
       bottomNavigationBar: CustomBottomNavigationBarWidget(),
     );

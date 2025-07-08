@@ -74,7 +74,8 @@ extension EntityMapper on VideoModel {
       qualities: mp4Urls?.toList(),
       mashallah: mashallah ?? 0,
       like: like ?? 0,
-      comments: comments
+      comments: comments,
+      channelSubscriber: channelSubscriber,
     );
   }
 }

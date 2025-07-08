@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:kahf_flutter/src/core/constants/assets_constants.dart';
 import 'package:kahf_flutter/src/features/home/presentation/provider/video_state.dart';
 
 import '../../../../common/widgets/app_error_widget.dart';
@@ -65,7 +67,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Mahfil'),
+        title: SvgPicture.asset(AssetsConstants.kahfLogo),
         centerTitle: true,
         actions: [
           IconButton(

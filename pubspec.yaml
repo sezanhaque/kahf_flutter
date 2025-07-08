@@ -12,7 +12,9 @@ dependencies:
     
   cupertino_icons: ^1.0.8
   html: ^0.15.6
+  intl: ^0.20.2
   cached_network_image: ^3.4.1
+  flutter_svg: ^2.2.0
 
   # State Management
   flutter_riverpod: ^2.6.1
@@ -36,7 +38,8 @@ dependencies:
   # Network
   dio: ^5.8.0+1
   retrofit: ^4.5.0
-  intl: ^0.20.2
+
+  # Video Player
   better_player_plus: ^1.0.8
 
 dev_dependencies:
@@ -54,3 +57,6 @@ dev_dependencies:
   
 flutter:
   uses-material-design: true
+  assets:
+    - assets/logo/
+    - assets/svg/

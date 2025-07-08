@@ -29,7 +29,7 @@ class VideoCardWidget extends StatelessWidget {
         );
       },
       child: Card(
-        color: Theme.of(context).cardColor,
+        color: UIUtils.appBackgroundColor,
         elevation: 0,
         margin: const EdgeInsets.all(8.0),
         child: Column(

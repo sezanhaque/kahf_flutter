@@ -7,5 +7,6 @@
     "Mahfil",
     "mashallah"
   ],
-  "editor.inlineSuggest.edits.showCollapsed": false
+  "editor.inlineSuggest.edits.showCollapsed": false,
+  "cmake.ignoreCMakeListsMissing": true
 }

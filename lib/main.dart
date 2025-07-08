@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kahf_flutter/src/core/logger/riverpod_log.dart';
+import 'package:kahf_flutter/src/core/utils/ui_utils.dart';
 import 'package:kahf_flutter/src/features/home/presentation/screen/home_screen.dart';
 
 void main() {
@@ -18,6 +19,7 @@ class MyApp extends ConsumerWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         useMaterial3: true,
+        scaffoldBackgroundColor: UIUtils.appBackgroundColor,
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
       home: HomeScreen(),

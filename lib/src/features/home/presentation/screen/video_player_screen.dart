@@ -25,6 +25,7 @@ class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen> {
   final TextEditingController _commentController = TextEditingController();
   final FocusNode _commentFocusNode = FocusNode();
   bool _isSubscribed = false;
+  bool _isExpanded = false;
 
   @override
   void initState() {
@@ -60,6 +61,8 @@ class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen> {
     );
 
     _betterPlayerController = BetterPlayerController(betterPlayerConfiguration);
+    _betterPlayerController.setBetterPlayerGlobalKey(GlobalKey());
+    _betterPlayerController.setOverriddenFit(BoxFit.contain);
     _betterPlayerController.setupDataSource(betterPlayerDataSource);
   }
 
@@ -74,8 +77,9 @@ class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
+      body: SafeArea(
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Video Player
             AspectRatio(
@@ -84,114 +88,255 @@ class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen> {
             ),
 
             // Video Info
-            Padding(
-              padding: const EdgeInsets.all(16),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // Video Title
-                  Text(
-                    widget.video.title,
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 8),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        children: [
+                          // Video Title
+                          GestureDetector(
+                            onTap: () {
+                              setState(() {
+                                _isExpanded = !_isExpanded;
+                              });
+                            },
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                ListTile(
+                                  contentPadding: const EdgeInsets.all(0),
+                                  trailing: _isExpanded
+                                      ? const Icon(Icons.expand_less, size: 24)
+                                      : const Icon(Icons.expand_more, size: 24),
+                                  title: Text(
+                                    widget.video.title,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .titleMedium
+                                        ?.copyWith(fontWeight: FontWeight.bold),
+                                    maxLines: 3,
+                                    overflow: _isExpanded
+                                        ? TextOverflow.visible
+                                        : TextOverflow.ellipsis,
+                                  ),
+                                ),
+                                if (_isExpanded) ...[
+                                  const SizedBox(height: 8),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Text(
+                                      widget.video.description,
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.bodyMedium,
+                                    ),
+                                  ),
+                                ],
+                              ],
+                            ),
+                          ),
 
-                  // Views and Time
-                  Row(
-                    children: [
-                      Text(
-                        '${NumberFormat.compact().format(widget.video.viewCount)} views',
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Colors.grey[600],
-                        ),
+                          // Views and Time
+                          Row(
+                            children: [
+                              Text(
+                                '${NumberFormat.compact().format(widget.video.viewCount)} views',
+                                style: Theme.of(context).textTheme.bodySmall
+                                    ?.copyWith(color: Colors.grey[600]),
+                              ),
+                              const SizedBox(width: 8),
+                              Text(
+                                ' ${widget.video.publishedAt.timeAgo}',
+                                style: Theme.of(context).textTheme.bodySmall
+                                    ?.copyWith(color: Colors.grey[600]),
+                              ),
+                            ],
+                          ),
+
+                          const SizedBox(height: 16),
+
+                          // Action Buttons
+                          SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Wrap(
+                              spacing: 8,
+                              runSpacing: 8,
+                              children: [
+                                _buildActionButton(
+                                  icon: Icons.favorite_border,
+                                  label:
+                                      'MASHALLAH (${widget.video.mashallah})',
+                                ),
+                                _buildActionButton(
+                                  icon: Icons.thumb_up_alt_outlined,
+                                  label: 'LIKE (${widget.video.like})',
+                                ),
+                                _buildActionButton(
+                                  icon: Icons.download_outlined,
+                                  label: 'Download',
+                                ),
+                                _buildActionButton(
+                                  icon: Icons.more_vert,
+                                  label: 'More',
+                                  onPressed: () async {
+                                    await UIUtils.showOptionsModal(context);
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+
+                          const SizedBox(height: 16),
+
+                          // Channel Section
+                          Row(
+                            children: [
+                              CircleAvatar(
+                                radius: 24,
+                                backgroundImage: CachedNetworkImageProvider(
+                                  widget.video.channelImage,
+                                ),
+                              ),
+                              const SizedBox(width: 8),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      widget.video.channelName,
+                                      style: Theme.of(
+                                        context,
+                                      ).textTheme.titleMedium,
+                                    ),
+                                    Text(
+                                      '${NumberFormat.compact().format(int.parse(widget.video.channelSubscriber))} subscribers',
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodySmall
+                                          ?.copyWith(color: Colors.grey[600]),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(width: 12),
+                              ElevatedButton(
+                                onPressed: () {
+                                  setState(() {
+                                    _isSubscribed = !_isSubscribed;
+                                  });
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: _isSubscribed
+                                      ? Colors.grey[300]
+                                      : Colors.blue[300],
+                                  foregroundColor: _isSubscribed
+                                      ? Colors.black
+                                      : Colors.white,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(2),
+                                  ),
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 12,
+                                    vertical: 8,
+                                  ),
+                                ),
+                                child: Row(
+                                  children: [
+                                    const Icon(
+                                      Icons.plus_one_outlined,
+                                      size: 16,
+                                    ),
+                                    const SizedBox(width: 4),
+                                    Text(
+                                      _isSubscribed
+                                          ? 'Subscribed'
+                                          : 'Subscribe',
+                                      style: const TextStyle(fontSize: 14),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
                       ),
-                      const SizedBox(width: 8),
-                      Text(
-                        ' ${widget.video.publishedAt.timeAgo}',
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: Colors.grey[600],
-                        ),
-                      ),
-                    ],
-                  ),
-
-                  const SizedBox(height: 16),
-
-                  // Action Buttons
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Wrap(
-                      spacing: 8,
-                      runSpacing: 8,
-                      children: [
-                        _buildActionButton(
-                          icon: Icons.favorite_border,
-                          label: 'MASHALLAH (${widget.video.mashallah})',
-                        ),
-                        _buildActionButton(
-                          icon: Icons.thumb_up_alt_outlined,
-                          label: 'LIKE (${widget.video.like})',
-                        ),
-                        _buildActionButton(
-                          icon: Icons.download_outlined,
-                          label: 'Download',
-                        ),
-                        _buildActionButton(
-                          icon: Icons.more_vert,
-                          label: 'More',
-                          onPressed: () async {
-                            await UIUtils.showOptionsModal(context);
-                          },
-                        ),
-                      ],
                     ),
-                  ),
-                  const SizedBox(height: 24),
 
-                  // Comments Section
-                  Text(
-                    '${widget.video.comments?.length ?? 0} Comments',
-                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
+                    Divider(height: 1, color: Colors.grey[300]),
 
-                  // Comment Input
-                  TextField(
-                    controller: _commentController,
-                    focusNode: _commentFocusNode,
-                    decoration: InputDecoration(
-                      hintText: 'Add a comment...',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(25),
-                        borderSide: BorderSide.none,
-                      ),
-                      filled: true,
-                      fillColor: Colors.grey[200],
-                      contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 16,
-                        vertical: 12,
-                      ),
-                      suffixIcon: IconButton(
-                        icon: const Icon(Icons.send),
-                        onPressed: _postComment,
+                    // Comments Section
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                'Comments ${widget.video.comments?.length ?? 0}',
+                                style: Theme.of(context).textTheme.titleSmall
+                                    ?.copyWith(fontWeight: FontWeight.normal),
+                              ),
+                              Transform.rotate(
+                                angle: pi / 2,
+                                child: Icon(Icons.code_outlined, size: 20),
+                              ),
+                            ],
+                          ),
+
+                          const SizedBox(height: 16),
+
+                          // Comment Input
+                          TextField(
+                            controller: _commentController,
+                            focusNode: _commentFocusNode,
+                            decoration: InputDecoration(
+                              hintText: 'Add Comment',
+                              hintStyle: TextStyle(
+                                fontSize: 14,
+                                color: Colors.grey[500],
+                              ),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                                borderSide: BorderSide(
+                                  width: 0.2,
+                                  style: BorderStyle.solid,
+                                  color: Colors.grey[100]!,
+                                ),
+                              ),
+                              filled: true,
+                              fillColor: Colors.grey[100],
+                              contentPadding: const EdgeInsets.symmetric(
+                                horizontal: 16,
+                                vertical: 12,
+                              ),
+                              suffixIcon: IconButton(
+                                icon: const Icon(Icons.send_outlined),
+                                onPressed: _postComment,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 16),
+
+                          // Comments List
+                          if (widget.video.comments == null ||
+                              widget.video.comments!.isEmpty)
+                            _buildEmptyComments()
+                          else
+                            ...widget.video.comments!.map(
+                              (VideoCommentModel comment) =>
+                                  _buildCommentItem(comment),
+                            ),
+                        ],
                       ),
                     ),
-                  ),
-                  const SizedBox(height: 16),
-
-                  // Comments List
-                  if (widget.video.comments == null ||
-                      widget.video.comments!.isEmpty)
-                    _buildEmptyComments()
-                  else
-                    ...widget.video.comments!.map(
-                      (comment) => _buildCommentItem(comment),
-                    ),
-                ],
+                  ],
+                ),
               ),
             ),
           ],
@@ -241,7 +386,9 @@ class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen> {
         children: [
           CircleAvatar(
             radius: 20,
-            backgroundImage: CachedNetworkImageProvider(comment.userImage),
+            backgroundImage: CachedNetworkImageProvider(
+              comment.userImage ?? '',
+            ),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -282,28 +429,19 @@ class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen> {
   }
 
   Widget _buildEmptyComments() {
-    return Center(
-      child: Column(
-        children: [
-          const SizedBox(height: 40),
-          Container(
-            width: 80,
-            height: 80,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              color: Colors.grey[200],
-            ),
-            child: const Icon(Icons.mode_comment_outlined, size: 40),
+    return Row(
+      children: [
+        ClipOval(
+          child: Container(
+            width: 32,
+            height: 32,
+            color: Colors.blue[300],
+            padding: const EdgeInsets.all(16),
           ),
-          const SizedBox(height: 16),
-          const Text('Be the first to comment', style: TextStyle(fontSize: 16)),
-          const SizedBox(height: 8),
-          const Text(
-            'Start a conversation with the community',
-            style: TextStyle(fontSize: 14, color: Colors.grey),
-          ),
-        ],
-      ),
+        ),
+        const SizedBox(width: 8),
+        const Text("-  Be the first to comment"),
+      ],
     );
   }
 
@@ -318,7 +456,7 @@ class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen> {
       dislike: 0,
       userInformation: 123,
       createdAt: DateTime.now(),
-      userImage: 'https://example.com/avatar.jpg',
+      userImage: 'https://i.pravatar.cc/150?img=1',
       repliesCount: 0,
       isLike: false,
       isDislike: false,

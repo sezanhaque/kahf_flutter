@@ -39,7 +39,7 @@ class VideoInfoWidget extends StatelessWidget {
                           )
                         : CircleAvatar(
                             backgroundColor: Colors.grey[300],
-                            radius: 16,
+                            radius: 24,
                           ),
                   ),
                 ),

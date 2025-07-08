@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 class UIUtils {
+  static const Color appBackgroundColor = Color.fromARGB(255, 245, 246, 249);
 
   static Future<void> showOptionsModal(BuildContext context) async {
     await showModalBottomSheet(

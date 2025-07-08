@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
+import 'package:kahf_flutter/src/core/constants/assets_constants.dart';
 import 'package:kahf_flutter/src/core/extensions/format_extensions.dart';
 import 'package:kahf_flutter/src/core/utils/ui_utils.dart';
 import 'package:kahf_flutter/src/features/home/data/models/video/video_comment_model.dart';
@@ -22,8 +23,7 @@ class VideoPlayerScreen extends ConsumerStatefulWidget {
   ConsumerState<VideoPlayerScreen> createState() => _VideoPlayerScreenState();
 }
 
-class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen>
-    with SingleTickerProviderStateMixin {
+class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen> {
   late BetterPlayerController _betterPlayerController;
   final TextEditingController _commentController = TextEditingController();
   final FocusNode _commentFocusNode = FocusNode();
@@ -73,7 +73,6 @@ class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen>
     );
 
     _betterPlayerController = BetterPlayerController(betterPlayerConfiguration);
-    // _betterPlayerController.setBetterPlayerGlobalKey(betterPlayerKey);
     _betterPlayerController.setOverriddenFit(BoxFit.contain);
     _betterPlayerController.setupDataSource(betterPlayerDataSource);
 
@@ -429,7 +428,7 @@ class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen>
                                 ),
                                 suffixIcon: IconButton(
                                   icon: const Icon(Icons.send_outlined),
-                                  onPressed: _postComment,
+                                  onPressed: () {},
                                 ),
                               ),
                             ),
@@ -502,9 +501,7 @@ class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen>
         children: [
           CircleAvatar(
             radius: 20,
-            backgroundImage: CachedNetworkImageProvider(
-              comment.userImage ?? '',
-            ),
+            backgroundImage: AssetImage(AssetsConstants.userAvatar),
           ),
           const SizedBox(width: 12),
           Expanded(
@@ -559,31 +556,5 @@ class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen>
         const Text("-  Be the first to comment"),
       ],
     );
-  }
-
-  void _postComment() {
-    if (_commentController.text.trim().isEmpty) return;
-
-    // In a real app, you would call your API here
-    final newComment = VideoCommentModel(
-      id: Random().nextInt(100),
-      comment: _commentController.text,
-      like: 0,
-      dislike: 0,
-      userInformation: 123,
-      createdAt: DateTime.now(),
-      userImage: 'https://i.pravatar.cc/150?img=1',
-      repliesCount: 0,
-      isLike: false,
-      isDislike: false,
-      isVerified: true,
-    );
-
-    setState(() {
-      widget.video.comments?.insert(0, newComment);
-    });
-
-    _commentController.clear();
-    _commentFocusNode.unfocus();
   }
 }

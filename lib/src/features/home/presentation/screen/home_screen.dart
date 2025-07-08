@@ -168,7 +168,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       delegate: SliverChildBuilderDelegate((context, index) {
                         if (index < videos.length) {
                           // return VideoCardWidget(video: videos[index]);
-
+              
                           return GestureDetector(
                             onTap: () {
                               Navigator.push(
@@ -205,7 +205,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             ),
                           );
                         }
-
+              
                         return Padding(
                           padding: const EdgeInsets.symmetric(vertical: 32.0),
                           child: Center(

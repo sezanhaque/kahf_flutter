@@ -37,6 +37,29 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     });
   }
 
+  @override
+  void dispose() {
+    _miniPlayerController?.dispose();
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _loadInitialVideos() {
+    if (mounted && ref.read(videoNotifierProvider) is VideoStateInitial) {
+      ref.read(videoNotifierProvider.notifier).fetchVideos();
+    }
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels ==
+        _scrollController.position.maxScrollExtent) {
+      final state = ref.read(videoNotifierProvider);
+      if (state is VideoStateSuccess && state.hasMore && !state.isLoadingMore) {
+        ref.read(videoNotifierProvider.notifier).fetchVideos();
+      }
+    }
+  }
+
   void _showMiniPlayer(VideoEntity video) {
     if (_miniPlayerController != null) {
       _miniPlayerController!.dispose();
@@ -46,7 +69,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
       _currentMiniPlayerVideo = video;
       _miniPlayerController = BetterPlayerController(
         const BetterPlayerConfiguration(
-          // aspectRatio: 16 / 9,
           autoPlay: true,
           fit: BoxFit.fill,
           controlsConfiguration: BetterPlayerControlsConfiguration(
@@ -70,29 +92,6 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
         _miniPlayerController = null;
         _currentMiniPlayerVideo = null;
       });
-    }
-  }
-
-  @override
-  void dispose() {
-    _miniPlayerController?.dispose();
-    _scrollController.dispose();
-    super.dispose();
-  }
-
-  void _loadInitialVideos() {
-    if (mounted && ref.read(videoNotifierProvider) is VideoStateInitial) {
-      ref.read(videoNotifierProvider.notifier).fetchVideos();
-    }
-  }
-
-  void _onScroll() {
-    if (_scrollController.position.pixels ==
-        _scrollController.position.maxScrollExtent) {
-      final state = ref.read(videoNotifierProvider);
-      if (state is VideoStateSuccess && state.hasMore && !state.isLoadingMore) {
-        ref.read(videoNotifierProvider.notifier).fetchVideos();
-      }
     }
   }
 
@@ -168,7 +167,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                       delegate: SliverChildBuilderDelegate((context, index) {
                         if (index < videos.length) {
                           // return VideoCardWidget(video: videos[index]);
-              
+
                           return GestureDetector(
                             onTap: () {
                               Navigator.push(
@@ -205,7 +204,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                             ),
                           );
                         }
-              
+
                         return Padding(
                           padding: const EdgeInsets.symmetric(vertical: 32.0),
                           child: Center(
@@ -221,98 +220,89 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               ),
 
               // Mini Player at bottom
-              if (_currentMiniPlayerVideo != null)
-                Positioned(
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  child: GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => VideoPlayerScreen(
-                            video: _currentMiniPlayerVideo!,
-                            onMinimize: () =>
-                                _showMiniPlayer(_currentMiniPlayerVideo!),
-                          ),
-                        ),
-                      );
-                    },
-                    child: Container(
-                      height: 80,
-                      color: Colors.white,
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      child: Row(
-                        children: [
-                          SizedBox(
-                            width: 120,
-                            height: double.infinity,
-                            child: BetterPlayer(
-                              controller: _miniPlayerController!,
-                            ),
-                          ),
-                          const SizedBox(width: 8),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  _currentMiniPlayerVideo!.title,
-                                  style: const TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 12,
-                                  ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-
-                                Text(
-                                  _currentMiniPlayerVideo!.channelName,
-                                  style: const TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 10,
-                                  ),
-                                  maxLines: 1,
-                                  overflow: TextOverflow.ellipsis,
-                                ),
-                              ],
-                            ),
-                          ),
-                          IconButton(
-                            icon: Icon(
-                              _miniPlayerController!.isPlaying() ?? false
-                                  ? Icons.pause_outlined
-                                  : Icons.play_arrow_outlined,
-                              color: Colors.grey[500],
-                            ),
-                            onPressed: () {
-                              if (_miniPlayerController!.isPlaying() == true) {
-                                _miniPlayerController!.pause();
-                              } else {
-                                _miniPlayerController!.play();
-                              }
-                              setState(() {});
-                            },
-                          ),
-                          IconButton(
-                            icon: Icon(
-                              Icons.close_outlined,
-                              color: Colors.grey[500],
-                            ),
-                            onPressed: _closeMiniPlayer,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
+              if (_currentMiniPlayerVideo != null) _buildMiniPlayer(),
             ],
           );
         },
       ),
       bottomNavigationBar: CustomBottomNavigationBarWidget(),
+    );
+  }
+
+  Widget _buildMiniPlayer() {
+    return Positioned(
+      bottom: 0,
+      left: 0,
+      right: 0,
+      child: GestureDetector(
+        onTap: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => VideoPlayerScreen(
+                video: _currentMiniPlayerVideo!,
+                onMinimize: () => _showMiniPlayer(_currentMiniPlayerVideo!),
+              ),
+            ),
+          );
+        },
+        child: Container(
+          height: 80,
+          color: Colors.white,
+          padding: const EdgeInsets.symmetric(horizontal: 12),
+          child: Row(
+            children: [
+              SizedBox(
+                width: 120,
+                height: double.infinity,
+                child: BetterPlayer(controller: _miniPlayerController!),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      _currentMiniPlayerVideo!.title,
+                      style: const TextStyle(color: Colors.black, fontSize: 12),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+
+                    Text(
+                      _currentMiniPlayerVideo!.channelName,
+                      style: const TextStyle(color: Colors.black, fontSize: 10),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ],
+                ),
+              ),
+              IconButton(
+                icon: Icon(
+                  _miniPlayerController!.isPlaying() ?? false
+                      ? Icons.pause_outlined
+                      : Icons.play_arrow_outlined,
+                  color: Colors.grey[500],
+                ),
+                onPressed: () {
+                  if (_miniPlayerController!.isPlaying() == true) {
+                    _miniPlayerController!.pause();
+                  } else {
+                    _miniPlayerController!.play();
+                  }
+                  setState(() {});
+                },
+              ),
+              IconButton(
+                icon: Icon(Icons.close_outlined, color: Colors.grey[500]),
+                onPressed: _closeMiniPlayer,
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 

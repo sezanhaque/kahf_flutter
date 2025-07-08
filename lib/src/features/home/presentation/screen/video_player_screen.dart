@@ -39,6 +39,14 @@ class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen> {
     _initializePlayer();
   }
 
+  @override
+  void dispose() {
+    _betterPlayerController.dispose();
+    _commentController.dispose();
+    _commentFocusNode.dispose();
+    super.dispose();
+  }
+
   void _initializePlayer() {
     BetterPlayerConfiguration betterPlayerConfiguration =
         BetterPlayerConfiguration(
@@ -93,78 +101,6 @@ class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen> {
       widget.onMinimize?.call();
       Navigator.of(context).pop();
     }
-  }
-
-  Widget _buildMiniPlayer() {
-    return Positioned(
-      bottom: 0,
-      left: 0,
-      right: 0,
-      child: GestureDetector(
-        onVerticalDragUpdate: (details) {
-          if (details.delta.dy > 5) {
-            // Swiping down
-            _toggleMiniPlayer();
-          }
-        },
-        child: Container(
-          height: 80,
-          color: Colors.black,
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          child: Row(
-            children: [
-              SizedBox(
-                width: 120,
-                height: 68,
-                child: BetterPlayer(
-                  key: _betterPlayerKey,
-                  controller: _betterPlayerController,
-                ),
-              ),
-              const SizedBox(width: 8),
-              Expanded(
-                child: Text(
-                  widget.video.title,
-                  style: const TextStyle(color: Colors.white),
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-              IconButton(
-                icon: Icon(
-                  _betterPlayerController.isPlaying() == true
-                      ? Icons.pause
-                      : Icons.play_arrow,
-                  color: Colors.white,
-                ),
-                onPressed: () {
-                  if (_betterPlayerController.isPlaying() == true) {
-                    _betterPlayerController.pause();
-                  } else {
-                    _betterPlayerController.play();
-                  }
-                  setState(() {});
-                },
-              ),
-              IconButton(
-                icon: const Icon(Icons.close, color: Colors.white),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  @override
-  void dispose() {
-    _betterPlayerController.dispose();
-    _commentController.dispose();
-    _commentFocusNode.dispose();
-    super.dispose();
   }
 
   @override
@@ -455,6 +391,70 @@ class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen> {
             // Mini Player (slides up from bottom)
             if (_isMiniPlayerActive) _buildMiniPlayer(),
           ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildMiniPlayer() {
+    return Positioned(
+      bottom: 0,
+      left: 0,
+      right: 0,
+      child: GestureDetector(
+        onVerticalDragUpdate: (details) {
+          if (details.delta.dy > 5) {
+            // Swiping down
+            _toggleMiniPlayer();
+          }
+        },
+        child: Container(
+          height: 80,
+          color: Colors.black,
+          padding: const EdgeInsets.symmetric(horizontal: 8),
+          child: Row(
+            children: [
+              SizedBox(
+                width: 120,
+                height: 68,
+                child: BetterPlayer(
+                  key: _betterPlayerKey,
+                  controller: _betterPlayerController,
+                ),
+              ),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  widget.video.title,
+                  style: const TextStyle(color: Colors.white),
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+              IconButton(
+                icon: Icon(
+                  _betterPlayerController.isPlaying() == true
+                      ? Icons.pause
+                      : Icons.play_arrow,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  if (_betterPlayerController.isPlaying() == true) {
+                    _betterPlayerController.pause();
+                  } else {
+                    _betterPlayerController.play();
+                  }
+                  setState(() {});
+                },
+              ),
+              IconButton(
+                icon: const Icon(Icons.close, color: Colors.white),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
         ),
       ),
     );

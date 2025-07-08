@@ -14,8 +14,9 @@ part 'parts/video_info_widget.dart';
 class VideoCardWidget extends StatelessWidget {
   final VideoEntity? video;
   final bool isLoading;
+  final Function()? onMinimize;
 
-  const VideoCardWidget({super.key, this.video, this.isLoading = false});
+  const VideoCardWidget({super.key, this.video, this.isLoading = false, this.onMinimize});
 
   @override
   Widget build(BuildContext context) {

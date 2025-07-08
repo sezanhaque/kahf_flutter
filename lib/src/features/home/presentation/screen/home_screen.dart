@@ -7,6 +7,7 @@ import 'package:kahf_flutter/src/features/home/presentation/provider/video_state
 
 import '../../../../common/widgets/app_error_widget.dart';
 import '../../../../common/widgets/app_loading_indicator.dart';
+import '../../../../common/widgets/custom_bottom_navigation_bar_widget.dart';
 import '../../../../core/providers/error_notifier.dart';
 import '../../../../core/utils/ui_utils.dart';
 import '../../domain/entities/video_entity.dart';
@@ -62,12 +63,14 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     });
   }
 
-  void _closeMiniPlayer() {
-    setState(() {
-      _miniPlayerController?.dispose();
-      _miniPlayerController = null;
-      _currentMiniPlayerVideo = null;
-    });
+  void _closeMiniPlayer() async {
+    if (mounted) {
+      setState(() {
+        _miniPlayerController?.dispose();
+        _miniPlayerController = null;
+        _currentMiniPlayerVideo = null;
+      });
+    }
   }
 
   @override
@@ -309,6 +312,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           );
         },
       ),
+      bottomNavigationBar: CustomBottomNavigationBarWidget(),
     );
   }
 

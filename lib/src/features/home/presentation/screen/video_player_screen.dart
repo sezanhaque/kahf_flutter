@@ -32,30 +32,14 @@ class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen>
 
   bool _isMiniPlayerActive = false;
   final GlobalKey _betterPlayerKey = GlobalKey();
-  late AnimationController _animationController;
-  late Animation<Offset> _offsetAnimation;
 
   @override
   void initState() {
     super.initState();
     _initializePlayer();
-    _animationController = AnimationController(
-      duration: const Duration(milliseconds: 300),
-      vsync: this,
-    );
-    _offsetAnimation =
-        Tween<Offset>(begin: Offset.zero, end: const Offset(0.0, 1.0)).animate(
-          CurvedAnimation(
-            parent: _animationController,
-            curve: Curves.easeInOut,
-          ),
-        );
   }
 
   void _initializePlayer() {
-    // Create a global key for PiP mode
-    // final GlobalKey betterPlayerKey = GlobalKey();
-
     BetterPlayerConfiguration betterPlayerConfiguration =
         BetterPlayerConfiguration(
           aspectRatio: 16 / 9,
@@ -102,17 +86,14 @@ class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen>
   }
 
   void _toggleMiniPlayer() {
-    if (_isMiniPlayerActive) {
-      _animationController.reverse();
-    } else {
-      _animationController.forward();
-    }
-    setState(() {
-      _isMiniPlayerActive = !_isMiniPlayerActive;
-    });
+    if (mounted) {
+      setState(() {
+        _isMiniPlayerActive = !_isMiniPlayerActive;
+      });
 
-    widget.onMinimize?.call();
-    Navigator.of(context).pop();
+      widget.onMinimize?.call();
+      Navigator.of(context).pop();
+    }
   }
 
   Widget _buildMiniPlayer() {
@@ -133,7 +114,7 @@ class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen>
           padding: const EdgeInsets.symmetric(horizontal: 8),
           child: Row(
             children: [
-              Container(
+              SizedBox(
                 width: 120,
                 height: 68,
                 child: BetterPlayer(
@@ -184,7 +165,6 @@ class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen>
     _betterPlayerController.dispose();
     _commentController.dispose();
     _commentFocusNode.dispose();
-    _animationController.dispose();
     super.dispose();
   }
 
@@ -195,8 +175,8 @@ class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen>
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // Video Player
-            if (!_isMiniPlayerActive)
+            if (!_isMiniPlayerActive) ...[
+              // Video Player
               AspectRatio(
                 aspectRatio: 16 / 9,
                 child: GestureDetector(
@@ -212,9 +192,8 @@ class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen>
                   ),
                 ),
               ),
-      
-            // Video Info
-            if (!_isMiniPlayerActive)
+
+              // Video Info
               Expanded(
                 child: SingleChildScrollView(
                   child: Column(
@@ -232,8 +211,7 @@ class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen>
                                 });
                               },
                               child: Column(
-                                crossAxisAlignment:
-                                    CrossAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   ListTile(
                                     contentPadding: const EdgeInsets.all(0),
@@ -275,30 +253,26 @@ class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen>
                                 ],
                               ),
                             ),
-      
+
                             // Views and Time
                             Row(
                               children: [
                                 Text(
                                   '${NumberFormat.compact().format(widget.video.viewCount)} views',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodySmall
+                                  style: Theme.of(context).textTheme.bodySmall
                                       ?.copyWith(color: Colors.grey[600]),
                                 ),
                                 const SizedBox(width: 8),
                                 Text(
                                   ' ${widget.video.publishedAt.timeAgo}',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodySmall
+                                  style: Theme.of(context).textTheme.bodySmall
                                       ?.copyWith(color: Colors.grey[600]),
                                 ),
                               ],
                             ),
-      
+
                             const SizedBox(height: 16),
-      
+
                             // Action Buttons
                             SingleChildScrollView(
                               scrollDirection: Axis.horizontal,
@@ -323,26 +297,23 @@ class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen>
                                     icon: Icons.more_vert,
                                     label: 'More',
                                     onPressed: () async {
-                                      await UIUtils.showOptionsModal(
-                                        context,
-                                      );
+                                      await UIUtils.showOptionsModal(context);
                                     },
                                   ),
                                 ],
                               ),
                             ),
-      
+
                             const SizedBox(height: 16),
-      
+
                             // Channel Section
                             Row(
                               children: [
                                 CircleAvatar(
                                   radius: 24,
-                                  backgroundImage:
-                                      CachedNetworkImageProvider(
-                                        widget.video.channelImage,
-                                      ),
+                                  backgroundImage: CachedNetworkImageProvider(
+                                    widget.video.channelImage,
+                                  ),
                                 ),
                                 const SizedBox(width: 8),
                                 Expanded(
@@ -361,9 +332,7 @@ class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen>
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodySmall
-                                            ?.copyWith(
-                                              color: Colors.grey[600],
-                                            ),
+                                            ?.copyWith(color: Colors.grey[600]),
                                       ),
                                     ],
                                   ),
@@ -383,9 +352,7 @@ class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen>
                                         ? Colors.black
                                         : Colors.white,
                                     shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(
-                                        2,
-                                      ),
+                                      borderRadius: BorderRadius.circular(2),
                                     ),
                                     padding: const EdgeInsets.symmetric(
                                       horizontal: 12,
@@ -394,18 +361,13 @@ class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen>
                                   ),
                                   child: Row(
                                     children: [
-                                      const Icon(
-                                        Icons.add_outlined,
-                                        size: 16,
-                                      ),
+                                      const Icon(Icons.add_outlined, size: 16),
                                       const SizedBox(width: 4),
                                       Text(
                                         _isSubscribed
                                             ? 'Subscribed'
                                             : 'Subscribe',
-                                        style: const TextStyle(
-                                          fontSize: 14,
-                                        ),
+                                        style: const TextStyle(fontSize: 14),
                                       ),
                                     ],
                                   ),
@@ -415,9 +377,9 @@ class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen>
                           ],
                         ),
                       ),
-      
+
                       Divider(height: 1, color: Colors.grey[300]),
-      
+
                       // Comments Section
                       Padding(
                         padding: const EdgeInsets.all(16.0),
@@ -425,30 +387,22 @@ class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen>
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Row(
-                              mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
                                   'Comments ${widget.video.comments?.length ?? 0}',
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .titleSmall
-                                      ?.copyWith(
-                                        fontWeight: FontWeight.normal,
-                                      ),
+                                  style: Theme.of(context).textTheme.titleSmall
+                                      ?.copyWith(fontWeight: FontWeight.normal),
                                 ),
                                 Transform.rotate(
                                   angle: pi / 2,
-                                  child: Icon(
-                                    Icons.code_outlined,
-                                    size: 20,
-                                  ),
+                                  child: Icon(Icons.code_outlined, size: 20),
                                 ),
                               ],
                             ),
-      
+
                             const SizedBox(height: 16),
-      
+
                             // Comment Input
                             TextField(
                               controller: _commentController,
@@ -480,7 +434,7 @@ class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen>
                               ),
                             ),
                             const SizedBox(height: 16),
-      
+
                             // Comments List
                             if (widget.video.comments == null ||
                                 widget.video.comments!.isEmpty)
@@ -497,6 +451,8 @@ class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen>
                   ),
                 ),
               ),
+            ],
+
             // Mini Player (slides up from bottom)
             if (_isMiniPlayerActive) _buildMiniPlayer(),
           ],

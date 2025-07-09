@@ -100,5 +100,4 @@ Home Screen Video PiP Mode
 Mahfil Demo App Video Google Drive
 </a>
 
-App GIF
-![](https://github.com/sezanhaque/kahf_flutter/blob/master/screenshots/Mahfil_Demo_App.gif)
+<a href="https://github.com/sezanhaque/kahf_flutter/blob/master/screenshots/Mahfil_Demo_App.gif" target="_blank">App GIF</a>

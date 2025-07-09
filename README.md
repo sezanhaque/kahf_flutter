@@ -101,4 +101,4 @@ Mahfil Demo App Video Google Drive
 </a>
 
 App GIF
-![](https://raw.github.com/sezanhaque/kahf_flutter/master/screenshots/Mahfil_Demo_App.gif)
+![](https://github.com/sezanhaque/kahf_flutter/blob/master/screenshots/Mahfil_Demo_App.gif)

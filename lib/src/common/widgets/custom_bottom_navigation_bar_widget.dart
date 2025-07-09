@@ -42,7 +42,7 @@ class _CustomBottomNavigationBarWidgetState
                 Text(
                   label,
                   style: TextStyle(
-                    fontSize: MediaQuery.of(context).devicePixelRatio * 5.5,
+                    fontSize: 12,
                     fontWeight: FontWeight.w600,
                     color: isSelected ? Colors.blue[900] : Colors.grey,
                   ),

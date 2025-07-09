@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kahf_flutter/src/core/constants/string_constants.dart';
 import 'package:kahf_flutter/src/core/logger/riverpod_log.dart';
@@ -8,6 +9,7 @@ import 'src/screens/splash_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   runApp(ProviderScope(observers: [RiverpodLog()], child: const MyApp()));
 }
 

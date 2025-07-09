@@ -8,7 +8,8 @@ class CustomBottomNavigationBarWidget extends StatefulWidget {
       _CustomBottomNavigationBarWidgetState();
 }
 
-class _CustomBottomNavigationBarWidgetState extends State<CustomBottomNavigationBarWidget> {
+class _CustomBottomNavigationBarWidgetState
+    extends State<CustomBottomNavigationBarWidget> {
   int _currentIndex = 0;
 
   void _onItemTapped(int index) {
@@ -25,21 +26,30 @@ class _CustomBottomNavigationBarWidgetState extends State<CustomBottomNavigation
     final bool isSelected = _currentIndex == index;
 
     return Expanded(
-      child: GestureDetector(
-        onTap: () => _onItemTapped(index),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(icon, color: isSelected ? Colors.blue[900] : Colors.grey),
-            const SizedBox(height: 4),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 12,
-                color: isSelected ? Colors.blue[900] : Colors.grey,
-              ),
+      child: Material(
+        color: Colors.white,
+        child: InkWell(
+          onTap: () => _onItemTapped(index),
+          splashColor: Colors.grey[300],
+          borderRadius: const BorderRadius.all(Radius.circular(8)),
+          child: Container(
+            padding: const EdgeInsets.symmetric(vertical: 4),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Icon(icon, color: isSelected ? Colors.blue[900] : Colors.grey),
+                const SizedBox(height: 4),
+                Text(
+                  label,
+                  style: TextStyle(
+                    fontSize: MediaQuery.of(context).devicePixelRatio * 5.5,
+                    fontWeight: FontWeight.w600,
+                    color: isSelected ? Colors.blue[900] : Colors.grey,
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );

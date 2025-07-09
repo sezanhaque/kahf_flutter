@@ -9,7 +9,6 @@ import '../../../../common/widgets/app_error_widget.dart';
 import '../../../../common/widgets/app_loading_indicator.dart';
 import '../../../../common/widgets/custom_bottom_navigation_bar_widget.dart';
 import '../../../../core/providers/error_notifier.dart';
-import '../../../../core/utils/ui_utils.dart';
 import '../../domain/entities/video_entity.dart';
 import '../provider/video_notifier.dart';
 import '../widgets/video/video_card_widget.dart';
@@ -104,9 +103,12 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
     });
 
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: SvgPicture.asset(AssetsConstants.kahfLogo),
         centerTitle: true,
+        surfaceTintColor: Colors.transparent,
+        forceMaterialTransparency: true,
         leading: Padding(
           padding: const EdgeInsets.all(8),
           child: CircleAvatar(
@@ -188,7 +190,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
                                   );
                                 },
                                 child: Card(
-                                  color: UIUtils.appBackgroundColor,
+                                  color: Colors.white,
                                   elevation: 0,
                                   margin: const EdgeInsets.all(8.0),
                                   child: Column(

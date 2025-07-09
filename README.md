@@ -59,19 +59,19 @@ lib/
 ```
 
 ### 🖼️ Screenshots:
-![Splash Screen](https://raw.github.com/sezanhaque/kahf_flutter/master/screenshots/1_Splash_Screen.PNG)
+Splash Screen ![Splash Screen](https://raw.github.com/sezanhaque/kahf_flutter/master/screenshots/1_Splash_Screen.PNG)
 
-![Home Screen Loading with Shimmer Effect](https://raw.github.com/sezanhaque/kahf_flutter/master/screenshots/2_Home_Screen_Loading_with_shimmer_effect.PNG)
+Home Screen Loading with Shimmer Effect ![Home Screen Loading with Shimmer Effect](https://raw.github.com/sezanhaque/kahf_flutter/master/screenshots/2_Home_Screen_Loading_with_shimmer_effect.PNG)
 
-![Home Screen](https://raw.github.com/sezanhaque/kahf_flutter/master/screenshots/3_Home_Screen.PNG)
+Home Screen ![Home Screen](https://raw.github.com/sezanhaque/kahf_flutter/master/screenshots/3_Home_Screen.PNG)
 
-![Video Player Screen](https://raw.github.com/sezanhaque/kahf_flutter/master/screenshots/4_Video_Player_Screen.PNG)
+Video Player Screen ![Video Player Screen](https://raw.github.com/sezanhaque/kahf_flutter/master/screenshots/4_Video_Player_Screen.PNG)
 
-![Video Player Full Screen](https://raw.github.com/sezanhaque/kahf_flutter/master/screenshots/5_Video_Player_Full_Screen.PNG)
+Video Player Full Screen ![Video Player Full Screen](https://raw.github.com/sezanhaque/kahf_flutter/master/screenshots/5_Video_Player_Full_Screen.PNG)
 
-![Video Player More Option](https://raw.github.com/sezanhaque/kahf_flutter/master/screenshots/6_Video_Player_More_Option.PNG)
+Video Player More Option ![Video Player More Option](https://raw.github.com/sezanhaque/kahf_flutter/master/screenshots/6_Video_Player_More_Option.PNG)
 
-![Home Screen Video PiP Mode](https://raw.github.com/sezanhaque/kahf_flutter/master/screenshots/7_Home_Screen_Video_PiP_Mode.PNG)
+Home Screen Video PiP Mode![Home Screen Video PiP Mode](https://raw.github.com/sezanhaque/kahf_flutter/master/screenshots/7_Home_Screen_Video_PiP_Mode.PNG)
 ---
 
 ### Video

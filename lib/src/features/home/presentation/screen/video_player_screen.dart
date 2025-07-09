@@ -88,7 +88,6 @@ class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen> {
     _betterPlayerController.setOverriddenFit(BoxFit.contain);
     _betterPlayerController.setupDataSource(betterPlayerDataSource);
 
-    // Handle fullscreen exit
     _betterPlayerController.addEventsListener((event) {
       if (event.betterPlayerEventType == BetterPlayerEventType.hideFullscreen) {
         SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
@@ -111,21 +110,16 @@ class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Video Player
-            Flexible(
-              child: AspectRatio(
-                aspectRatio: 16 / 9,
-                child: GestureDetector(
-                  onVerticalDragUpdate: (details) {
-                    if (details.delta.dy > 5) {
-                      // Swiping down
-                      _toggleMiniPlayer();
-                    }
-                  },
-                  child: BetterPlayer(
-                    key: _betterPlayerKey,
-                    controller: _betterPlayerController,
-                  ),
-                ),
+            GestureDetector(
+              onVerticalDragUpdate: (details) {
+                if (details.delta.dy > 5) {
+                  // Swiping down
+                  _toggleMiniPlayer();
+                }
+              },
+              child: BetterPlayer(
+                key: _betterPlayerKey,
+                controller: _betterPlayerController,
               ),
             ),
 

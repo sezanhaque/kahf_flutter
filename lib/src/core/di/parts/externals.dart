@@ -16,7 +16,6 @@ Dio dio(Ref ref) {
   );
 
   dio.interceptors.addAll([
-    // ExceptionHandlerInterceptor(),
     Utf8Interceptor(),
     if (kDebugMode) PrettyDioLogger(requestHeader: true, requestBody: true),
   ]);

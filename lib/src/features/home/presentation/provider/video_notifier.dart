@@ -46,6 +46,7 @@ class VideoNotifier extends _$VideoNotifier {
           : <VideoEntity>[];
 
       final List<VideoEntity> newVideoEntry = response.results
+          .where((e) => e.objectType == ObjectType.VIDEO)
           .map((e) => e.toEntity())
           .toList();
 

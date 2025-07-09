@@ -77,13 +77,17 @@ class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen> {
     BetterPlayerDataSource betterPlayerDataSource = BetterPlayerDataSource(
       BetterPlayerDataSourceType.network,
       widget.video.manifest ?? widget.video.qualities?.first.videoUrl ?? '',
+      videoFormat: BetterPlayerVideoFormat.hls,
+      headers: {
+        'User-Agent':
+            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36',
+      },
     );
 
     _betterPlayerController = BetterPlayerController(betterPlayerConfiguration);
     _betterPlayerController.setOverriddenFit(BoxFit.contain);
     _betterPlayerController.setupDataSource(betterPlayerDataSource);
 
-    // Handle fullscreen exit
     _betterPlayerController.addEventsListener((event) {
       if (event.betterPlayerEventType == BetterPlayerEventType.hideFullscreen) {
         SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
@@ -106,19 +110,16 @@ class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Video Player
-            AspectRatio(
-              aspectRatio: 16 / 9,
-              child: GestureDetector(
-                onVerticalDragUpdate: (details) {
-                  if (details.delta.dy > 5) {
-                    // Swiping down
-                    _toggleMiniPlayer();
-                  }
-                },
-                child: BetterPlayer(
-                  key: _betterPlayerKey,
-                  controller: _betterPlayerController,
-                ),
+            GestureDetector(
+              onVerticalDragUpdate: (details) {
+                if (details.delta.dy > 5) {
+                  // Swiping down
+                  _toggleMiniPlayer();
+                }
+              },
+              child: BetterPlayer(
+                key: _betterPlayerKey,
+                controller: _betterPlayerController,
               ),
             ),
 

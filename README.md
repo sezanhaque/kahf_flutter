@@ -19,6 +19,10 @@ Make sure you have the following installed:
 - [FVM](https://fvm.app/docs/getting_started/installation)
 - [Java JDK 17+](https://adoptium.net/temurin/releases/)
 - Android Studio or VS Code (with Flutter & Dart plugins)
+- Make sure NDK 27 is installed: (for some plugin dependencies)
+   - Open Android Studio > SDK Manager > SDK Tools
+   - Enable NDK (Side by side) → Check if version 27.0 is installed.
+   - If not, install it from there.
 
 ---
 
@@ -59,20 +63,42 @@ lib/
 ```
 
 ### 🖼️ Screenshots:
-Splash Screen ![Splash Screen](https://raw.github.com/sezanhaque/kahf_flutter/master/screenshots/1_Splash_Screen.PNG)
+Splash Screen 
 
-Home Screen Loading with Shimmer Effect ![Home Screen Loading with Shimmer Effect](https://raw.github.com/sezanhaque/kahf_flutter/master/screenshots/2_Home_Screen_Loading_with_shimmer_effect.PNG)
+<img src="https://raw.github.com/sezanhaque/kahf_flutter/master/screenshots/1_Splash_Screen.PNG" width="200" height="400"/>
 
-Home Screen ![Home Screen](https://raw.github.com/sezanhaque/kahf_flutter/master/screenshots/3_Home_Screen.PNG)
+Home Screen Loading with Shimmer Effect 
 
-Video Player Screen ![Video Player Screen](https://raw.github.com/sezanhaque/kahf_flutter/master/screenshots/4_Video_Player_Screen.PNG)
+<img src="https://raw.github.com/sezanhaque/kahf_flutter/master/screenshots/2_Home_Screen_Loading_with_shimmer_effect.PNG" width="200" height="400"/>
 
-Video Player Full Screen ![Video Player Full Screen](https://raw.github.com/sezanhaque/kahf_flutter/master/screenshots/5_Video_Player_Full_Screen.PNG)
+Home Screen
 
-Video Player More Option ![Video Player More Option](https://raw.github.com/sezanhaque/kahf_flutter/master/screenshots/6_Video_Player_More_Option.PNG)
+<img src="https://raw.github.com/sezanhaque/kahf_flutter/master/screenshots/3_Home_Screen.PNG" width="200" height="400"/>
 
-Home Screen Video PiP Mode![Home Screen Video PiP Mode](https://raw.github.com/sezanhaque/kahf_flutter/master/screenshots/7_Home_Screen_Video_PiP_Mode.PNG)
+Video Player Screen
+
+<img src="https://raw.github.com/sezanhaque/kahf_flutter/master/screenshots/4_Video_Player_Screen.PNG" width="200" height="400"/>
+
+Video Player Full Screen
+
+<img src="https://raw.github.com/sezanhaque/kahf_flutter/master/screenshots/5_Video_Player_Full_Screen.PNG" width="200" height="400"/>
+
+Video Player More Option
+
+<img src="https://raw.github.com/sezanhaque/kahf_flutter/master/screenshots/6_Video_Player_More_Option.PNG" width="200" height="400"/>
+
+Home Screen Video PiP Mode 
+
+<img src="https://raw.github.com/sezanhaque/kahf_flutter/master/screenshots/7_Home_Screen_Video_PiP_Mode.PNG" width="200" height="400"/>
+
 ---
 
 ### Video
-![Mahfil Demo App Video](https://drive.google.com/file/d/1UCZbmAe5FpUKjIZJbTMJKgnACo5vFrDE/view?usp=sharing)
+
+
+<a href="https://drive.google.com/file/d/1UCZbmAe5FpUKjIZJbTMJKgnACo5vFrDE/view?usp=sharing" target="_blank">
+Mahfil Demo App Video Google Drive
+</a>
+
+App GIF
+![](https://raw.github.com/sezanhaque/kahf_flutter/master/screenshots/Mahfil_Demo_App.gif)

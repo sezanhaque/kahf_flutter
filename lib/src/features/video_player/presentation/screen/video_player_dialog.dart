@@ -3,196 +3,174 @@ import 'dart:math';
 import 'package:better_player_plus/better_player_plus.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
-import 'package:kahf_flutter/src/core/constants/assets_constants.dart';
 import 'package:kahf_flutter/src/core/extensions/format_extensions.dart';
-import 'package:kahf_flutter/src/core/utils/ui_utils.dart';
-import 'package:kahf_flutter/src/features/home/data/models/video/video_comment_model.dart';
+import 'package:kahf_flutter/src/features/video_player/presentation/provider/video_player_notifier.dart';
 
-import '../../domain/entities/video_entity.dart';
+import '../../../../core/constants/assets_constants.dart';
+import '../../../../core/utils/ui_utils.dart';
+import '../../../home/data/models/video/video_comment_model.dart';
+import '../../../home/domain/entities/video_entity.dart';
 
-class VideoPlayerScreen extends ConsumerStatefulWidget {
+class VideoPlayerDialog extends ConsumerStatefulWidget {
   final VideoEntity video;
-  final Function()? onMinimize;
 
-  const VideoPlayerScreen({super.key, required this.video, this.onMinimize});
+  const VideoPlayerDialog({super.key, required this.video});
 
   @override
-  ConsumerState<VideoPlayerScreen> createState() => _VideoPlayerScreenState();
+  ConsumerState<VideoPlayerDialog> createState() => _VideoPlayerDialogState();
 }
 
-class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen> {
-  late BetterPlayerController _betterPlayerController;
+class _VideoPlayerDialogState extends ConsumerState<VideoPlayerDialog>
+    with TickerProviderStateMixin {
   final TextEditingController _commentController = TextEditingController();
   final FocusNode _commentFocusNode = FocusNode();
+  late final VideoPlayerNotifier _playerNotifier;
+  late final AnimationController _dragController;
+
   bool _isSubscribed = false;
   bool _isExpanded = false;
 
-  final GlobalKey _betterPlayerKey = GlobalKey();
+  // For mini player drag
+  double _dragOffset = 0.0;
+  final double _threshold = 150.0;
 
   @override
   void initState() {
     super.initState();
-    _initializePlayer();
-  }
 
-  @override
-  void dispose() {
-    _betterPlayerController.dispose();
-    _commentController.dispose();
-    _commentFocusNode.dispose();
-    super.dispose();
-  }
+    _playerNotifier = ref.read(videoPlayerNotifierProvider.notifier);
 
-  void _initializePlayer() {
-    BetterPlayerConfiguration betterPlayerConfiguration =
-        BetterPlayerConfiguration(
-          aspectRatio: 16 / 9,
-          fit: BoxFit.contain,
-          autoPlay: true,
-          autoDetectFullscreenDeviceOrientation: true,
-          allowedScreenSleep: false,
-          fullScreenAspectRatio: 16 / 9,
-          deviceOrientationsAfterFullScreen: [
-            DeviceOrientation.portraitUp,
-            DeviceOrientation.landscapeLeft,
-            DeviceOrientation.landscapeRight,
-          ],
-          controlsConfiguration: BetterPlayerControlsConfiguration(
-            enableMute: true,
-            enableOverflowMenu: true,
-            enablePlayPause: true,
-            enableFullscreen: true,
-            enableSubtitles: true,
-            enableAudioTracks: true,
-            enableQualities: true,
-            enableProgressText: true,
-            enablePlaybackSpeed: true,
-            enablePip: false,
-          ),
-        );
-
-    BetterPlayerDataSource betterPlayerDataSource = BetterPlayerDataSource(
-      BetterPlayerDataSourceType.network,
-      widget.video.manifest ?? widget.video.qualities?.first.videoUrl ?? '',
-      videoFormat: BetterPlayerVideoFormat.hls,
-      headers: {
-        'User-Agent':
-            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.36',
-      },
-      notificationConfiguration: BetterPlayerNotificationConfiguration(
-        showNotification: true,
-        title: widget.video.title,
-        author: widget.video.channelName,
-        imageUrl: widget.video.thumbnail,
-        activityName: "MainActivity",
-      ),
+    _dragController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
     );
 
-    _betterPlayerController = BetterPlayerController(betterPlayerConfiguration);
-    _betterPlayerController.setOverriddenFit(BoxFit.contain);
-    _betterPlayerController.setupDataSource(betterPlayerDataSource);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final currentVideo = ref.read(videoPlayerNotifierProvider).currentVideo;
 
-    _betterPlayerController.addEventsListener((event) {
-      if (event.betterPlayerEventType == BetterPlayerEventType.hideFullscreen) {
-        SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
+      // Only set video if it's different
+      if (currentVideo == null ||
+          currentVideo.manifest != widget.video.manifest) {
+        _playerNotifier.setVideo(widget.video);
+      } else {
+        _playerNotifier.toggleMiniPlayer(false);
       }
     });
   }
 
-  void _toggleMiniPlayer() {
-    if (mounted) {
-      widget.onMinimize?.call();
+  void _handleDragUpdate(DragUpdateDetails details) {
+    setState(() {
+      _dragOffset += details.delta.dy;
+    });
+  }
+
+  void _handleDragEnd(DragEndDetails details) {
+    if (_dragOffset > _threshold) {
+      _playerNotifier.toggleMiniPlayer(true);
       Navigator.of(context).pop();
+    } else {
+      setState(() => _dragOffset = 0);
     }
   }
 
   @override
+  void dispose() {
+    _dragController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Video Player
-            GestureDetector(
-              onVerticalDragUpdate: (details) {
-                if (details.delta.dy > 5) {
-                  // Swiping down
-                  _toggleMiniPlayer();
-                }
-              },
-              child: BetterPlayer(
-                key: _betterPlayerKey,
-                controller: _betterPlayerController,
-              ),
-            ),
+    final controller = ref.watch(videoPlayerNotifierProvider).controller;
+    controller?.setControlsEnabled(true);
 
-            // Details
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        children: [
-                          // Video Info
-                          _buildVideoInfo(),
-
-                          const SizedBox(height: 16),
-
-                          // Action Buttons
-                          SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Wrap(
-                              spacing: 8,
-                              runSpacing: 8,
-                              children: [
-                                _buildActionButton(
-                                  icon: Icons.favorite_border,
-                                  label:
-                                      'MASHALLAH (${widget.video.mashallah})',
-                                ),
-                                _buildActionButton(
-                                  icon: Icons.thumb_up_alt_outlined,
-                                  label: 'LIKE (${widget.video.like})',
-                                ),
-                                _buildActionButton(
-                                  icon: Icons.download_outlined,
-                                  label: 'Download',
-                                ),
-                                _buildActionButton(
-                                  icon: Icons.more_vert,
-                                  label: 'More',
-                                  onPressed: () async {
-                                    await UIUtils.showOptionsModal(context);
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-
-                          const SizedBox(height: 16),
-
-                          // Channel Section
-                          _buildChannelInfoSection(),
-                        ],
-                      ),
-                    ),
-
-                    Divider(height: 1, color: Colors.grey[300]),
-
-                    // Comments Section
-                    _buildCommentSection(),
-                  ],
+    return Transform.translate(
+      offset: Offset(0, _dragOffset),
+      child: GestureDetector(
+        onVerticalDragUpdate: _handleDragUpdate,
+        onVerticalDragEnd: _handleDragEnd,
+        child: Scaffold(
+          backgroundColor: Colors.white,
+          body: SafeArea(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                // Video Player
+                AspectRatio(
+                  aspectRatio: 16 / 9,
+                  child: controller == null
+                      ? const Center(child: CircularProgressIndicator())
+                      : BetterPlayer(controller: controller),
                 ),
-              ),
+
+                // Video Details
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Video Info
+                            _buildVideoInfo(),
+
+                            const SizedBox(height: 16),
+
+                            // Action Buttons
+                            SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Wrap(
+                                spacing: 8,
+                                runSpacing: 8,
+                                children: [
+                                  _buildActionButton(
+                                    icon: Icons.favorite_border,
+                                    label:
+                                        'MASHALLAH (${widget.video.mashallah})',
+                                  ),
+                                  _buildActionButton(
+                                    icon: Icons.thumb_up_alt_outlined,
+                                    label: 'LIKE (${widget.video.like})',
+                                  ),
+                                  _buildActionButton(
+                                    icon: Icons.download_outlined,
+                                    label: 'Download',
+                                  ),
+                                  _buildActionButton(
+                                    icon: Icons.more_vert,
+                                    label: 'More',
+                                    onPressed: () async {
+                                      await UIUtils.showOptionsModal(context);
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+
+                            const SizedBox(height: 16),
+
+                            // Channel Section
+                            _buildChannelInfoSection(),
+
+                            const SizedBox(height: 16),
+                          ],
+                        ),
+
+                        Divider(height: 1, color: Colors.grey[300]),
+
+                        // Comments Section
+                        _buildCommentSection(),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
+          ),
         ),
       ),
     );
@@ -263,6 +241,39 @@ class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen> {
     );
   }
 
+  Widget _buildActionButton({
+    required IconData icon,
+    required String label,
+    VoidCallback? onPressed,
+  }) {
+    return InkWell(
+      onTap: onPressed ?? () {},
+      splashColor: Colors.grey[300],
+      borderRadius: const BorderRadius.all(Radius.circular(8)),
+      child: Container(
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+        decoration: BoxDecoration(
+          border: Border.all(color: Colors.grey[300]!, width: 1),
+          borderRadius: const BorderRadius.all(Radius.circular(8)),
+        ),
+        child: Column(
+          children: [
+            Icon(icon, size: 24, color: Colors.grey[800]),
+            const SizedBox(height: 4),
+            Text(
+              label,
+              style: TextStyle(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: Colors.grey[800],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   Widget _buildChannelInfoSection() {
     return Row(
       children: [
@@ -324,7 +335,7 @@ class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen> {
 
   Widget _buildCommentSection() {
     return Padding(
-      padding: const EdgeInsets.all(16.0),
+      padding: const EdgeInsets.symmetric(vertical: 12),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -383,39 +394,6 @@ class _VideoPlayerScreenState extends ConsumerState<VideoPlayerScreen> {
               (VideoCommentModel comment) => _buildCommentItem(comment),
             ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildActionButton({
-    required IconData icon,
-    required String label,
-    VoidCallback? onPressed,
-  }) {
-    return InkWell(
-      onTap: onPressed ?? () {},
-      splashColor: Colors.grey[300],
-      borderRadius: const BorderRadius.all(Radius.circular(8)),
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-        decoration: BoxDecoration(
-          border: Border.all(color: Colors.grey[300]!, width: 1),
-          borderRadius: const BorderRadius.all(Radius.circular(8)),
-        ),
-        child: Column(
-          children: [
-            Icon(icon, size: 24, color: Colors.grey[800]),
-            const SizedBox(height: 4),
-            Text(
-              label,
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w600,
-                color: Colors.grey[800],
-              ),
-            ),
-          ],
-        ),
       ),
     );
   }
